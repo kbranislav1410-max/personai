@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
+import { randomBytes } from 'crypto';
 import { prisma } from '@/lib/prisma';
 import { successResponse, errorResponse } from '@/lib/api-response';
 import { ALLOWED_FILE_TYPES, ALLOWED_FILE_EXTENSIONS, MAX_FILE_SIZE } from '@/lib/validation';
@@ -9,9 +10,16 @@ import type { Resume } from '@prisma/client';
 // Helper function to generate unique filename
 function generateUniqueFilename(originalName: string): string {
   const timestamp = Date.now();
-  const randomString = Math.random().toString(36).substring(2, 15);
-  const extension = originalName.substring(originalName.lastIndexOf('.'));
-  const nameWithoutExt = originalName.substring(0, originalName.lastIndexOf('.'));
+  const randomString = randomBytes(8).toString('hex');
+  const lastDotIndex = originalName.lastIndexOf('.');
+  
+  if (lastDotIndex === -1) {
+    // No extension found (should not happen due to validation, but handle it anyway)
+    return `${originalName}-${timestamp}-${randomString}`;
+  }
+  
+  const extension = originalName.substring(lastDotIndex);
+  const nameWithoutExt = originalName.substring(0, lastDotIndex);
   return `${nameWithoutExt}-${timestamp}-${randomString}${extension}`;
 }
 
@@ -26,7 +34,15 @@ function validateFile(file: File): { valid: boolean; error?: string } {
   }
 
   // Check file extension
-  const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+  const lastDotIndex = file.name.lastIndexOf('.');
+  if (lastDotIndex === -1) {
+    return {
+      valid: false,
+      error: `File ${file.name} has no extension. Only PDF and DOCX files are allowed`,
+    };
+  }
+  
+  const extension = file.name.substring(lastDotIndex).toLowerCase();
   if (!ALLOWED_FILE_EXTENSIONS.includes(extension)) {
     return {
       valid: false,
@@ -107,8 +123,9 @@ export async function POST(request: NextRequest) {
       const buffer = Buffer.from(bytes);
       await writeFile(filePath, buffer);
 
-      // Determine file type
-      const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+      // Determine file type (safe here because validation already checked for extension)
+      const lastDotIndex = file.name.lastIndexOf('.');
+      const extension = lastDotIndex !== -1 ? file.name.substring(lastDotIndex).toLowerCase() : '';
       const fileType = extension === '.pdf' ? 'pdf' : 'docx';
 
       // Create Resume record in database
