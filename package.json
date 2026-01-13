@@ -15,5 +15,11 @@
     "url": "https://github.com/kbranislav1410-max/personai"
   },
   "author": "kbranislav1410-max",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0"
+  }
 }

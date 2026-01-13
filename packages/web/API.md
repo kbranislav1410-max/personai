@@ -395,6 +395,136 @@ Extract text content from an uploaded resume file.
 - If text has already been extracted, returns the existing resume without re-processing
 - Handles extraction errors gracefully with detailed error messages
 
+### Candidate Scores
+
+#### PATCH `/api/candidate-scores/[id]`
+Update a candidate score's decision and/or status fields.
+
+**Request:** PATCH request with score ID in URL path and decision/status in body
+```json
+{
+  "decision": "shortlist",  // Optional: "undecided", "shortlist", or "reject"
+  "status": "next_round"    // Optional: "pending", "next_round", or "rejected"
+}
+```
+
+**Response:** `200 OK` or `400 Bad Request`, `404 Not Found`
+```json
+{
+  "ok": true,
+  "data": {
+    "id": 1,
+    "analysisRunId": 1,
+    "candidateId": 1,
+    "score": 85,
+    "recommendation": "yes",
+    "summary": "Strong match with excellent technical skills...",
+    "strengths": "TypeScript, React, Node.js",
+    "gaps": "Cloud platforms",
+    "status": "next_round",
+    "decision": "shortlist",
+    "Candidate": {
+      "id": 1,
+      "fullName": "John Doe",
+      "email": "john@example.com",
+      "phone": "+1234567890",
+      "location": "San Francisco, CA",
+      "createdAt": "2026-01-13T20:00:00.000Z"
+    },
+    "AnalysisRun": {
+      "id": 1,
+      "positionId": 1,
+      "customRequirements": "Experience with cloud platforms",
+      "createdAt": "2026-01-13T20:15:00.000Z",
+      "status": "done",
+      "Position": {
+        "id": 1,
+        "title": "Senior Software Engineer",
+        "department": "Engineering",
+        "seniority": "Senior"
+      }
+    }
+  }
+}
+```
+
+**Notes:**
+- Can update `decision` field: "undecided" (default), "shortlist", or "reject"
+- Can update `status` field: "pending" (default), "next_round", or "rejected"
+- Can update one or both fields in a single request
+- Returns the updated candidate score with related Candidate and AnalysisRun data
+
+#### PATCH `/api/candidate-scores/[id]/status`
+Update only the status field of a candidate score (legacy endpoint, use above for more flexibility).
+
+**Request:** PATCH request with score ID in URL path and status in body
+```json
+{
+  "status": "next_round"  // Required: "pending", "next_round", or "rejected"
+}
+```
+
+**Response:** Same format as `/api/candidate-scores/[id]`
+
+### Candidates
+
+#### GET `/api/candidates/[id]`
+Retrieve a candidate's profile with all resumes and complete analysis history.
+
+**Request:** GET request with candidate ID in URL path
+
+**Response:** `200 OK` or `404 Not Found`
+```json
+{
+  "ok": true,
+  "data": {
+    "id": 1,
+    "fullName": "John Doe",
+    "email": "john@example.com",
+    "phone": "+1234567890",
+    "location": "San Francisco, CA",
+    "createdAt": "2026-01-13T20:00:00.000Z",
+    "Resume": [
+      {
+        "id": 1,
+        "fileName": "john-doe-resume.pdf",
+        "fileType": "pdf",
+        "fileUrl": "/uploads/john-doe-resume-1768334554433-abc123.pdf",
+        "storagePath": "/public/uploads/john-doe-resume-1768334554433-abc123.pdf",
+        "rawText": "JOHN DOE...",
+        "createdAt": "2026-01-13T20:02:34.436Z"
+      }
+    ],
+    "CandidateScore": [
+      {
+        "id": 1,
+        "score": 85,
+        "recommendation": "yes",
+        "summary": "Strong match with excellent technical skills...",
+        "status": "next_round",
+        "decision": "shortlist",
+        "createdAt": "2026-01-13T20:15:00.000Z",
+        "AnalysisRun": {
+          "id": 1,
+          "createdAt": "2026-01-13T20:15:00.000Z",
+          "Position": {
+            "id": 1,
+            "title": "Senior Software Engineer",
+            "department": "Engineering",
+            "seniority": "Senior"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+**Notes:**
+- Returns candidate with all uploaded resumes
+- Includes complete analysis history sorted by date (newest first)
+- Each analysis score includes related position information
+
 ## Error Handling
 
 All endpoints return appropriate HTTP status codes:
@@ -424,9 +554,19 @@ packages/web/
 │   │   │   └── [id]/
 │   │   │       └── route.ts      # GET/PUT/DELETE /api/positions/[id]
 │   │   ├── analysis-runs/
-│   │   │   ├── route.ts          # POST /api/analysis-runs
+│   │   │   ├── route.ts          # GET/POST /api/analysis-runs
 │   │   │   └── [id]/
-│   │   │       └── route.ts      # GET /api/analysis-runs/[id]
+│   │   │       ├── route.ts      # GET /api/analysis-runs/[id]
+│   │   │       └── run/
+│   │   │           └── route.ts  # POST /api/analysis-runs/[id]/run
+│   │   ├── candidate-scores/
+│   │   │   └── [id]/
+│   │   │       ├── route.ts      # PATCH /api/candidate-scores/[id]
+│   │   │       └── status/
+│   │   │           └── route.ts  # PATCH /api/candidate-scores/[id]/status
+│   │   ├── candidates/
+│   │   │   └── [id]/
+│   │   │       └── route.ts      # GET /api/candidates/[id]
 │   │   └── resumes/
 │   │       ├── upload/
 │   │       │   └── route.ts      # POST /api/resumes/upload
@@ -439,7 +579,8 @@ packages/web/
 │   ├── prisma.ts                 # Prisma client singleton
 │   ├── api-response.ts           # Response utilities
 │   ├── validation.ts             # Zod schemas
-│   └── text-extraction.ts        # Resume text extraction utilities
+│   ├── text-extraction.ts        # Resume text extraction utilities
+│   └── scoring-engine.ts         # MVP keyword-based scoring engine
 ├── public/
 │   └── uploads/                  # Resume file storage
 └── package.json

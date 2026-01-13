@@ -12,6 +12,7 @@ interface CandidateScore {
   strengths: string;
   gaps: string;
   status: string;
+  decision: string;
   Candidate: {
     id: number;
     fullName: string;
@@ -47,6 +48,7 @@ export default function AnalysisRunDetailPage() {
   const [sortField, setSortField] = useState<SortField>('score');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [updatingStatus, setUpdatingStatus] = useState<number | null>(null);
+  const [updatingDecision, setUpdatingDecision] = useState<number | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -102,6 +104,70 @@ export default function AnalysisRunDetailPage() {
     } finally {
       setUpdatingStatus(null);
     }
+  };
+
+  const updateCandidateDecision = async (scoreId: number, decision: string) => {
+    try {
+      setUpdatingDecision(scoreId);
+      const response = await fetch(`/api/candidate-scores/${scoreId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ decision }),
+      });
+
+      const result = await response.json();
+
+      if (result.ok) {
+        // Update local state
+        setAnalysisRun(prev => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            CandidateScore: prev.CandidateScore.map(score =>
+              score.id === scoreId ? { ...score, decision } : score
+            ),
+          };
+        });
+      } else {
+        alert(result.error || 'Failed to update decision');
+      }
+    } catch (err) {
+      alert('Failed to update decision');
+    } finally {
+      setUpdatingDecision(null);
+    }
+  };
+
+  const exportToCSV = () => {
+    if (!analysisRun) return;
+
+    // Prepare CSV data
+    const headers = ['Candidate Name', 'Score', 'Recommendation', 'Decision', 'Status', 'Summary'];
+    const rows = analysisRun.CandidateScore.map(score => [
+      score.Candidate.fullName,
+      score.score.toString(),
+      score.recommendation,
+      score.decision,
+      score.status,
+      score.summary.replace(/"/g, '""'), // Escape quotes
+    ]);
+
+    // Create CSV content
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `analysis_${analysisRun.Position.title.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const getFilteredAndSortedScores = () => {
@@ -178,6 +244,15 @@ export default function AnalysisRunDetailPage() {
     };
   };
 
+  const getDecisionButtonClass = (current: string, target: string) => {
+    if (current === target) {
+      if (target === 'shortlist') return 'bg-green-600 text-white';
+      if (target === 'reject') return 'bg-red-600 text-white';
+      return 'bg-gray-600 text-white';
+    }
+    return 'bg-gray-100 text-gray-700 hover:bg-gray-200';
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -228,6 +303,12 @@ export default function AnalysisRunDetailPage() {
             })}
           </p>
         </div>
+        <button
+          onClick={exportToCSV}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+        >
+          Export CSV
+        </button>
       </div>
 
       {/* Position Info */}
@@ -303,6 +384,9 @@ export default function AnalysisRunDetailPage() {
                 Summary
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Decision
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -313,7 +397,7 @@ export default function AnalysisRunDetailPage() {
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredScores.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-sm text-gray-500">
+                <td colSpan={7} className="px-6 py-12 text-center text-sm text-gray-500">
                   No candidates match the selected filter.
                 </td>
               </tr>
@@ -341,6 +425,34 @@ export default function AnalysisRunDetailPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm text-gray-600 max-w-md">{score.summary}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => updateCandidateDecision(score.id, 'undecided')}
+                          disabled={updatingDecision === score.id}
+                          className={`px-2 py-1 rounded text-xs font-medium transition-colors disabled:opacity-50 ${getDecisionButtonClass(score.decision, 'undecided')}`}
+                          title="Undecided"
+                        >
+                          —
+                        </button>
+                        <button
+                          onClick={() => updateCandidateDecision(score.id, 'shortlist')}
+                          disabled={updatingDecision === score.id}
+                          className={`px-2 py-1 rounded text-xs font-medium transition-colors disabled:opacity-50 ${getDecisionButtonClass(score.decision, 'shortlist')}`}
+                          title="Shortlist"
+                        >
+                          ✓
+                        </button>
+                        <button
+                          onClick={() => updateCandidateDecision(score.id, 'reject')}
+                          disabled={updatingDecision === score.id}
+                          className={`px-2 py-1 rounded text-xs font-medium transition-colors disabled:opacity-50 ${getDecisionButtonClass(score.decision, 'reject')}`}
+                          title="Reject"
+                        >
+                          ✕
+                        </button>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${statusBadge.className}`}>
