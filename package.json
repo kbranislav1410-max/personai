@@ -1,0 +1,19 @@
+{
+  "name": "personai",
+  "version": "1.0.0",
+  "description": "Monorepo for PersonAI packages",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "echo \"Define build scripts for your packages\"",
+    "test": "echo \"Define test scripts for your packages\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kbranislav1410-max/personai"
+  },
+  "author": "kbranislav1410-max",
+  "license": "MIT"
+}
