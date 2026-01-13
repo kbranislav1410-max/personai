@@ -124,19 +124,76 @@ function AnalysisWizard() {
 
   const handleRunAnalysis = async () => {
     setLoading(true);
-    // Simulate analysis
-    setTimeout(() => {
-      const mockResults: AnalysisResult[] = uploadedFiles.map((file, index) => ({
-        candidateId: file.candidateId,
-        candidateName: file.file.name.replace(/\.(pdf|docx)$/i, ''),
-        score: Math.floor(Math.random() * 40) + 60, // 60-100
-        recommendation: index % 4 === 0 ? 'Strong Match' : index % 3 === 0 ? 'Good Match' : index % 2 === 0 ? 'Potential Match' : 'Weak Match',
-        summary: 'Strong technical background with relevant experience in the required technologies. Demonstrates excellent problem-solving skills and leadership qualities.',
-      }));
-      setAnalysisResults(mockResults.sort((a, b) => b.score - a.score));
-      setLoading(false);
+    
+    try {
+      // Step 1: Create analysis run
+      const createResponse = await fetch('/api/analysis-runs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          positionId: parseInt(selectedPositionId),
+          customRequirements: customRequirements || '',
+        }),
+      });
+
+      const createData = await createResponse.json();
+      
+      if (!createData.ok) {
+        throw new Error(createData.error || 'Failed to create analysis run');
+      }
+
+      const analysisRunId = createData.data.id;
+
+      // Step 2: Run the analysis with scoring engine
+      const runResponse = await fetch(`/api/analysis-runs/${analysisRunId}/run`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          weights: {
+            mustHave: mustHaveWeight,
+            niceToHave: niceToHaveWeight,
+            custom: customWeight,
+          },
+        }),
+      });
+
+      const runData = await runResponse.json();
+
+      if (!runData.ok) {
+        throw new Error(runData.error || 'Failed to run analysis');
+      }
+
+      // Step 3: Process results
+      const candidateScores = runData.data.analysisRun.CandidateScore || [];
+      
+      const results: AnalysisResult[] = candidateScores.map((cs: any) => {
+        let recommendation: 'Strong Match' | 'Good Match' | 'Potential Match' | 'Weak Match';
+        
+        if (cs.recommendation === 'yes') {
+          recommendation = 'Strong Match';
+        } else if (cs.recommendation === 'maybe') {
+          recommendation = cs.score >= 60 ? 'Good Match' : 'Potential Match';
+        } else {
+          recommendation = 'Weak Match';
+        }
+
+        return {
+          candidateId: cs.Candidate.id,
+          candidateName: cs.Candidate.fullName,
+          score: cs.score,
+          recommendation,
+          summary: cs.summary,
+        };
+      });
+
+      setAnalysisResults(results);
       setStep(4);
-    }, 2000);
+    } catch (error) {
+      console.error('Analysis failed:', error);
+      alert(error instanceof Error ? error.message : 'Failed to run analysis. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getStepStatus = (stepNum: number) => {

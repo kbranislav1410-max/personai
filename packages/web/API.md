@@ -195,6 +195,77 @@ Retrieve an analysis run with its associated position and candidate scores.
 }
 ```
 
+#### POST `/api/analysis-runs/[id]/run`
+Execute an analysis run using the MVP scoring engine. Processes all resumes with extracted text, scores them against the position requirements, and stores candidate scores.
+
+**Request Body (Optional):**
+```json
+{
+  "weights": {
+    "mustHave": 70,
+    "niceToHave": 20,
+    "custom": 10
+  }
+}
+```
+
+**Scoring Logic:**
+- **Keyword Matching**: Extracts keywords from position requirements and matches against resume text
+- **Weighted Scoring**: Combines must-have (default 70%), nice-to-have (20%), and custom (10%) requirements
+- **Recommendation Thresholds**:
+  - `yes` (Strong Match): Score >= 75
+  - `maybe` (Good/Potential Match): Score 50-74
+  - `no` (Weak Match): Score < 50
+- **Name Extraction**: Automatically extracts candidate name from first lines of resume text (fallback to filename)
+
+**Response:** `200 OK`, `400 Bad Request`, or `404 Not Found`
+```json
+{
+  "ok": true,
+  "data": {
+    "message": "Analysis completed successfully. Processed 3 candidate(s).",
+    "analysisRun": {
+      "id": 1,
+      "positionId": 1,
+      "customRequirements": "Must have experience with microservices",
+      "status": "done",
+      "createdAt": "2026-01-13T20:45:15.950Z",
+      "Position": {
+        "id": 1,
+        "title": "Senior Software Engineer",
+        "department": "Engineering",
+        "mustHave": "5+ years of TypeScript, React, Node.js",
+        "niceToHave": "Experience with Next.js, Prisma"
+      },
+      "CandidateScore": [
+        {
+          "id": 1,
+          "analysisRunId": 1,
+          "candidateId": 1,
+          "score": 85,
+          "recommendation": "yes",
+          "summary": "Strong candidate with excellent alignment to position requirements. Matches 4 of 5 must-have requirements and 2 of 2 nice-to-have skills. Demonstrates proficiency in typescript, react, node.js.",
+          "strengths": "typescript, react, node.js, next.js, prisma",
+          "gaps": "microservices",
+          "Candidate": {
+            "id": 1,
+            "fullName": "John Doe",
+            "email": "john@example.com"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+**Notes:**
+- Analysis run status updates: `queued` → `running` → `done` or `failed`
+- If already completed (status: `done`), returns existing results without re-running
+- Processes all resumes with `rawText` extracted (use `/api/resumes/[id]/extract-text` first)
+- Creates/updates Candidate records with extracted names
+- Returns results ordered by score (highest first)
+
 ### Resumes
 
 #### POST `/api/resumes/upload`
