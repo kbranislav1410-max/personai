@@ -66,8 +66,8 @@ model CandidateScore {
   score         Int      @default(0)   // 0-100
   recommendation String  // yes/maybe/no
   summary       String
-  strengths     Json
-  gaps          Json
+  strengths     String
+  gaps          String
 
   AnalysisRun   AnalysisRun @relation(fields: [analysisRunId], references: [id])
   Candidate     Candidate @relation(fields: [candidateId], references: [id])
