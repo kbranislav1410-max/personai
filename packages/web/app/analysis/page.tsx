@@ -26,6 +26,17 @@ type AnalysisResult = {
   summary: string;
 };
 
+type CandidateScoreResult = {
+  id: number;
+  score: number;
+  recommendation: string;
+  summary: string;
+  Candidate: {
+    id: number;
+    fullName: string;
+  };
+};
+
 function AnalysisWizard() {
   const searchParams = useSearchParams();
   const preselectedPositionId = searchParams.get('positionId');
@@ -164,9 +175,9 @@ function AnalysisWizard() {
       }
 
       // Step 3: Process results
-      const candidateScores = runData.data.analysisRun.CandidateScore || [];
+      const candidateScores: CandidateScoreResult[] = runData.data.analysisRun.CandidateScore || [];
       
-      const results: AnalysisResult[] = candidateScores.map((cs: any) => {
+      const results: AnalysisResult[] = candidateScores.map((cs) => {
         let recommendation: 'Strong Match' | 'Good Match' | 'Potential Match' | 'Weak Match';
         
         if (cs.recommendation === 'yes') {

@@ -39,7 +39,7 @@ function extractKeywords(text: string): string[] {
   
   // Split on punctuation, newlines, bullets, etc.
   const words = normalized
-    .split(/[,;\n•\-\|\/\\]/)
+    .split(/[,;\n•\|\/\\\-]/)
     .flatMap(phrase => phrase.trim().split(/\s+/))
     .filter(word => word.length > 2) // Filter out very short words
     .filter(word => !['and', 'the', 'for', 'with', 'from', 'that', 'this', 'have', 'has', 'are', 'was', 'were', 'been'].includes(word));
@@ -74,8 +74,8 @@ function calculateMatches(resumeText: string, requirements: string): { matchedKe
   }
   
   const matched = keywords.filter(keyword => {
-    // Check if keyword appears in resume
-    return resumeLower.includes(keyword.toLowerCase());
+    // Check if keyword appears in resume (keywords are already lowercase)
+    return resumeLower.includes(keyword);
   });
   
   const matchRate = matched.length / keywords.length;

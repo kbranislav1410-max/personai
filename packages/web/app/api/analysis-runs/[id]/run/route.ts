@@ -5,6 +5,14 @@ import { scoreCandidate, extractCandidateName } from '@/lib/scoring-engine';
 
 type Params = Promise<{ id: string }>;
 
+type RequestBody = {
+  weights?: {
+    mustHave: number;
+    niceToHave: number;
+    custom: number;
+  };
+};
+
 // POST /api/analysis-runs/[id]/run - Execute analysis run and compute candidate scores
 export async function POST(request: NextRequest, { params }: { params: Params }) {
   try {
@@ -51,8 +59,8 @@ export async function POST(request: NextRequest, { params }: { params: Params })
     });
 
     // Get all resumes with rawText extracted
-    // For MVP: We'll assume resumes have been uploaded and text extracted
-    // In production, you'd want to filter by specific resumes selected for this analysis
+    // For MVP: We'll process all resumes with extracted text
+    // TODO: In production, filter by specific resumes selected for this analysis run
     const resumes = await prisma.resume.findMany({
       where: {
         rawText: {
@@ -73,9 +81,10 @@ export async function POST(request: NextRequest, { params }: { params: Params })
     }
 
     // Get parsing weights from request body (optional)
-    let body: any = {};
+    let body: RequestBody = {};
     try {
-      body = await request.json();
+      const rawBody = await request.json();
+      body = rawBody as RequestBody;
     } catch {
       // No body or invalid JSON, use defaults
     }
