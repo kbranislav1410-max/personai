@@ -268,8 +268,61 @@ Upload one or multiple resume files for a candidate.
 **Notes:**
 - Files are saved to `/public/uploads` with unique filenames to prevent collisions
 - Filename format: `{original-name}-{timestamp}-{random}.{extension}`
-- The `rawText` field is initially empty and can be populated later by a text extraction service
+- The `rawText` field is initially empty and can be populated later using the `/api/resumes/[id]/extract-text` endpoint
 - Multiple files can be uploaded in a single request
+
+#### POST `/api/resumes/[id]/extract-text`
+Extract text content from an uploaded resume file.
+
+**Request:** POST request with resume ID in the URL path
+
+**Response:** `200 OK`, `404 Not Found`, or `500 Internal Server Error`
+```json
+{
+  "ok": true,
+  "data": {
+    "message": "Text extracted successfully",
+    "resume": {
+      "id": 1,
+      "candidateId": 1,
+      "fileName": "john-doe-resume.pdf",
+      "fileType": "pdf",
+      "fileUrl": "/uploads/john-doe-resume-1768334554433-abc123.pdf",
+      "storagePath": "/path/to/uploads/john-doe-resume-1768334554433-abc123.pdf",
+      "rawText": "JOHN DOE\nEmail: john@example.com\n\nEXPERIENCE\nSenior Developer...",
+      "createdAt": "2026-01-13T20:02:34.436Z"
+    }
+  }
+}
+```
+
+**Error Examples:**
+```json
+// Resume not found
+{
+  "ok": false,
+  "error": "Resume not found"
+}
+
+// Text extraction failed
+{
+  "ok": false,
+  "error": "Failed to extract text from PDF file: Invalid PDF format"
+}
+
+// Invalid resume ID
+{
+  "ok": false,
+  "error": "Invalid resume ID"
+}
+```
+
+**Notes:**
+- Uses `pdf-parse` for PDF text extraction
+- Uses `mammoth` for DOCX text extraction
+- Extracts and stores text in the `rawText` field of the Resume record
+- If text has already been extracted, returns the existing resume without re-processing
+- Handles extraction errors gracefully with detailed error messages
 
 ## Error Handling
 
@@ -304,14 +357,18 @@ packages/web/
 │   │   │   └── [id]/
 │   │   │       └── route.ts      # GET /api/analysis-runs/[id]
 │   │   └── resumes/
-│   │       └── upload/
-│   │           └── route.ts      # POST /api/resumes/upload
+│   │       ├── upload/
+│   │       │   └── route.ts      # POST /api/resumes/upload
+│   │       └── [id]/
+│   │           └── extract-text/
+│   │               └── route.ts  # POST /api/resumes/[id]/extract-text
 │   ├── layout.tsx
 │   └── page.tsx
 ├── lib/
 │   ├── prisma.ts                 # Prisma client singleton
 │   ├── api-response.ts           # Response utilities
-│   └── validation.ts             # Zod schemas
+│   ├── validation.ts             # Zod schemas
+│   └── text-extraction.ts        # Resume text extraction utilities
 ├── public/
 │   └── uploads/                  # Resume file storage
 └── package.json
@@ -349,4 +406,7 @@ curl -X POST http://localhost:3000/api/resumes/upload \
   -F "candidateId=1" \
   -F "files=@/path/to/resume.pdf" \
   -F "files=@/path/to/cover-letter.docx"
+
+# Extract text from uploaded resume
+curl -X POST http://localhost:3000/api/resumes/1/extract-text
 ```
