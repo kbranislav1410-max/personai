@@ -51,15 +51,6 @@ export async function PUT(request: NextRequest, { params }: { params: Params }) 
       );
     }
 
-    // Check if position exists
-    const existingPosition = await prisma.position.findUnique({
-      where: { id: positionId },
-    });
-
-    if (!existingPosition) {
-      return errorResponse('Position not found', 404);
-    }
-
     const position = await prisma.position.update({
       where: { id: positionId },
       data: validationResult.data,
@@ -68,6 +59,10 @@ export async function PUT(request: NextRequest, { params }: { params: Params }) 
     return successResponse(position);
   } catch (error) {
     console.error('Error updating position:', error);
+    // Check if error is due to record not found
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
+      return errorResponse('Position not found', 404);
+    }
     return errorResponse('Failed to update position', 500);
   }
 }
@@ -82,15 +77,6 @@ export async function DELETE(request: NextRequest, { params }: { params: Params 
       return errorResponse('Invalid position ID', 400);
     }
 
-    // Check if position exists
-    const existingPosition = await prisma.position.findUnique({
-      where: { id: positionId },
-    });
-
-    if (!existingPosition) {
-      return errorResponse('Position not found', 404);
-    }
-
     await prisma.position.delete({
       where: { id: positionId },
     });
@@ -98,6 +84,10 @@ export async function DELETE(request: NextRequest, { params }: { params: Params 
     return successResponse({ message: 'Position deleted successfully' });
   } catch (error) {
     console.error('Error deleting position:', error);
+    // Check if error is due to record not found
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
+      return errorResponse('Position not found', 404);
+    }
     return errorResponse('Failed to delete position', 500);
   }
 }

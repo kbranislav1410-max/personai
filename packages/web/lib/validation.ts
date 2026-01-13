@@ -17,7 +17,7 @@ export const updatePositionSchema = z.object({
   description: z.string().optional(),
   mustHave: z.string().min(1).optional(),
   niceToHave: z.string().min(1).optional(),
-}).refine(data => Object.keys(data).length > 0, {
+}).refine(data => Object.getOwnPropertyNames(data).length > 0, {
   message: 'At least one field must be provided for update',
 });
 
