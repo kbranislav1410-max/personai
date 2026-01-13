@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
           fileType,
           fileUrl: `/uploads/${uniqueFilename}`,
           storagePath: filePath,
-          rawText: '', // Will be populated later by text extraction service
+          rawText: '', // TODO: Implement text extraction service to populate this field with resume content
         },
       });
 
