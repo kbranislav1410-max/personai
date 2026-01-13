@@ -1,6 +1,6 @@
 # PersonAI API Documentation
 
-This Next.js application provides RESTful API endpoints for managing positions and analysis runs using TypeScript, Prisma, and Zod validation.
+This Next.js application provides RESTful API endpoints for managing positions, analysis runs, and resume uploads using TypeScript, Prisma, and Zod validation.
 
 ## Setup
 
@@ -195,6 +195,82 @@ Retrieve an analysis run with its associated position and candidate scores.
 }
 ```
 
+### Resumes
+
+#### POST `/api/resumes/upload`
+Upload one or multiple resume files for a candidate.
+
+**Content-Type:** `multipart/form-data`
+
+**Request Body:**
+- `candidateId`: Required, integer (form field)
+- `files`: Required, one or multiple files (form field, can be repeated)
+
+**Validation:**
+- File types: Only `.pdf` and `.docx` allowed
+- File size: Maximum 5MB per file
+- MIME types: `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`
+- Candidate must exist in the database
+
+**Response:** `201 Created`, `400 Bad Request`, or `404 Not Found`
+```json
+{
+  "ok": true,
+  "data": {
+    "message": "Successfully uploaded 2 file(s)",
+    "resumes": [
+      {
+        "id": 1,
+        "candidateId": 1,
+        "fileName": "john-doe-resume.pdf",
+        "fileType": "pdf",
+        "fileUrl": "/uploads/john-doe-resume-1768334554433-abc123.pdf",
+        "storagePath": "/path/to/uploads/john-doe-resume-1768334554433-abc123.pdf",
+        "rawText": "",
+        "createdAt": "2026-01-13T20:02:34.436Z"
+      },
+      {
+        "id": 2,
+        "candidateId": 1,
+        "fileName": "cover-letter.docx",
+        "fileType": "docx",
+        "fileUrl": "/uploads/cover-letter-1768334554440-def456.docx",
+        "storagePath": "/path/to/uploads/cover-letter-1768334554440-def456.docx",
+        "rawText": "",
+        "createdAt": "2026-01-13T20:02:34.442Z"
+      }
+    ]
+  }
+}
+```
+
+**Error Examples:**
+```json
+// File too large
+{
+  "ok": false,
+  "error": "File large-resume.pdf exceeds maximum size of 5MB"
+}
+
+// Invalid file type
+{
+  "ok": false,
+  "error": "File document.txt has invalid type. Only PDF and DOCX files are allowed"
+}
+
+// Candidate not found
+{
+  "ok": false,
+  "error": "Candidate not found"
+}
+```
+
+**Notes:**
+- Files are saved to `/public/uploads` with unique filenames to prevent collisions
+- Filename format: `{original-name}-{timestamp}-{random}.{extension}`
+- The `rawText` field is initially empty and can be populated later by a text extraction service
+- Multiple files can be uploaded in a single request
+
 ## Error Handling
 
 All endpoints return appropriate HTTP status codes:
@@ -223,16 +299,21 @@ packages/web/
 │   │   │   ├── route.ts          # GET/POST /api/positions
 │   │   │   └── [id]/
 │   │   │       └── route.ts      # GET/PUT/DELETE /api/positions/[id]
-│   │   └── analysis-runs/
-│   │       ├── route.ts          # POST /api/analysis-runs
-│   │       └── [id]/
-│   │           └── route.ts      # GET /api/analysis-runs/[id]
+│   │   ├── analysis-runs/
+│   │   │   ├── route.ts          # POST /api/analysis-runs
+│   │   │   └── [id]/
+│   │   │       └── route.ts      # GET /api/analysis-runs/[id]
+│   │   └── resumes/
+│   │       └── upload/
+│   │           └── route.ts      # POST /api/resumes/upload
 │   ├── layout.tsx
 │   └── page.tsx
 ├── lib/
 │   ├── prisma.ts                 # Prisma client singleton
 │   ├── api-response.ts           # Response utilities
 │   └── validation.ts             # Zod schemas
+├── public/
+│   └── uploads/                  # Resume file storage
 └── package.json
 ```
 
@@ -262,4 +343,10 @@ curl -X POST http://localhost:3000/api/analysis-runs \
     "positionId": 1,
     "customRequirements": "Experience with cloud platforms"
   }'
+
+# Upload resume files
+curl -X POST http://localhost:3000/api/resumes/upload \
+  -F "candidateId=1" \
+  -F "files=@/path/to/resume.pdf" \
+  -F "files=@/path/to/cover-letter.docx"
 ```

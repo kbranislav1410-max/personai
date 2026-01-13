@@ -38,6 +38,7 @@ model Resume {
   fileName    String
   fileType    String
   fileUrl     String
+  storagePath String
   rawText     String
   createdAt   DateTime @default(now())
 
