@@ -1,9 +1,10 @@
 import { NextRequest } from 'next/server';
-import { writeFile } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { prisma } from '@/lib/prisma';
 import { successResponse, errorResponse } from '@/lib/api-response';
 import { ALLOWED_FILE_TYPES, ALLOWED_FILE_EXTENSIONS, MAX_FILE_SIZE } from '@/lib/validation';
+import type { Resume } from '@prisma/client';
 
 // Helper function to generate unique filename
 function generateUniqueFilename(originalName: string): string {
@@ -90,8 +91,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Process and save files
-    const createdResumes = [];
+    const createdResumes: Resume[] = [];
     const uploadDir = join(process.cwd(), 'public', 'uploads');
+
+    // Ensure upload directory exists
+    await mkdir(uploadDir, { recursive: true });
 
     for (const file of files) {
       // Generate unique filename
