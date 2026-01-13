@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Position {
+  id          Int      @id @default(autoincrement())
+  title       String
+  department  String
+  seniority   String
+  description String?
+  mustHave    String
+  niceToHave  String
+  createdAt   DateTime @default(now())
+
+  AnalysisRun AnalysisRun[]
+}
+
+model Candidate {
+  id        Int      @id @default(autoincrement())
+  fullName  String
+  email     String?  @unique
+  phone     String?
+  location  String?
+  createdAt DateTime @default(now())
+
+  Resume        Resume[]
+  CandidateScore CandidateScore[]
+}
+
+model Resume {
+  id          Int      @id @default(autoincrement())
+  candidateId Int
+  fileName    String
+  fileType    String
+  fileUrl     String
+  rawText     String
+  createdAt   DateTime @default(now())
+
+  Candidate   Candidate @relation(fields: [candidateId], references: [id])
+
+  @@index([candidateId])
+}
+
+model AnalysisRun {
+  id                Int            @id @default(autoincrement())
+  positionId        Int
+  customRequirements String
+  createdAt         DateTime       @default(now())
+  status            String         // queued/running/done/failed
+
+  Position         Position @relation(fields: [positionId], references: [id])
+  CandidateScore   CandidateScore[]
+
+  @@index([positionId])
+}
+
+model CandidateScore {
+  id            Int      @id @default(autoincrement())
+  analysisRunId Int
+  candidateId   Int
+  score         Int      @default(0)   // 0-100
+  recommendation String  // yes/maybe/no
+  summary       String
+  strengths     Json
+  gaps          Json
+
+  AnalysisRun   AnalysisRun @relation(fields: [analysisRunId], references: [id])
+  Candidate     Candidate @relation(fields: [candidateId], references: [id])
+
+  @@index([analysisRunId])
+  @@index([candidateId])
+}
