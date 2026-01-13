@@ -69,6 +69,7 @@ model CandidateScore {
   summary       String
   strengths     String
   gaps          String
+  status        String   @default("pending") // pending/next_round/rejected
 
   AnalysisRun   AnalysisRun @relation(fields: [analysisRunId], references: [id])
   Candidate     Candidate @relation(fields: [candidateId], references: [id])

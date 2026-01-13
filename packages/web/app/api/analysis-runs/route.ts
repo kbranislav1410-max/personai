@@ -3,6 +3,34 @@ import { prisma } from '@/lib/prisma';
 import { successResponse, errorResponse } from '@/lib/api-response';
 import { createAnalysisRunSchema } from '@/lib/validation';
 
+// GET /api/analysis-runs - Get all analysis runs
+export async function GET() {
+  try {
+    const analysisRuns = await prisma.analysisRun.findMany({
+      include: {
+        Position: {
+          select: {
+            title: true,
+          },
+        },
+        CandidateScore: {
+          select: {
+            id: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return successResponse(analysisRuns);
+  } catch (error) {
+    console.error('Error fetching analysis runs:', error);
+    return errorResponse('Failed to fetch analysis runs', 500);
+  }
+}
+
 // POST /api/analysis-runs - Create a new analysis run
 export async function POST(request: NextRequest) {
   try {
