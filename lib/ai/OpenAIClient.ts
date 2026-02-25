@@ -1,12 +1,16 @@
 import OpenAI from "openai";
 
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error("Missing environment variable: OPENAI_API_KEY");
-}
+let _client: OpenAI | null = null;
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+function getClient(): OpenAI {
+  if (!_client) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("Missing environment variable: OPENAI_API_KEY");
+    }
+    _client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
+  return _client;
+}
 
 /**
  * Sends a plain-text prompt to the OpenAI Chat Completions API and returns
@@ -20,7 +24,7 @@ const openai = new OpenAI({
  * @throws {Error} When the API key is missing or the API call fails.
  */
 export async function generateText(prompt: string): Promise<string> {
-  const response = await openai.chat.completions.create({
+  const response = await getClient().chat.completions.create({
     model: "gpt-4o",
     messages: [{ role: "user", content: prompt }],
   });
