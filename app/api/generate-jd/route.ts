@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { buildJobDescriptionPrompt } from "@/features/job-description/prompts/buildJobDescriptionPrompt";
-import { generateText } from "@/lib/ai/OpenAIClient";
+import { generateJobDescriptionText } from "@/features/job-description/services/JobDescriptionService";
 
 const DESCRIPTION_MAX_LENGTH = 2000;
 
@@ -39,19 +38,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const prompt = buildJobDescriptionPrompt({
-    description: description.trim(),
-    language,
-    seniority: typeof seniority === "string" ? seniority : undefined,
-    location: typeof location === "string" ? location : undefined,
-    employmentType: typeof employmentType === "string" ? employmentType : undefined,
-  });
-
   try {
-    const jobDescription = await generateText(prompt);
+    const jobDescription = await generateJobDescriptionText({
+      description: description.trim(),
+      language,
+      seniority: typeof seniority === "string" ? seniority : undefined,
+      location: typeof location === "string" ? location : undefined,
+      employmentType: typeof employmentType === "string" ? employmentType : undefined,
+    });
     return NextResponse.json({ jobDescription }, { status: 200 });
   } catch (err) {
-    console.error("[generate-jd] OpenAI error:", err);
+    console.error("[generate-jd] Service error:", err);
     return NextResponse.json(
       { error: "Failed to generate job description. Please try again later." },
       { status: 500 }
