@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Sidebar from "./components/Sidebar";
 
 export const metadata: Metadata = {
-  title: "Personalistika AI – Job Description Generator",
-  description: "AI-powered job description generator",
+  title: "Personalistika AI",
+  description: "AI-powered HR tools",
 };
 
 export default function RootLayout({
@@ -13,7 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="appShell">
+        <Sidebar />
+        <main className="appContent">{children}</main>
+      </body>
     </html>
   );
 }

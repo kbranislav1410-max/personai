@@ -1,6 +1,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --sidebar-width: 220px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,5 +39,24 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+/* App shell */
+.appShell {
+  display: flex;
+}
+
+.appContent {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-height: 100vh;
+  padding: 3rem 2rem 4rem;
+}
+
+@media (max-width: 768px) {
+  .appContent {
+    margin-left: 0;
+    padding: 1rem 1rem 3rem;
   }
 }
