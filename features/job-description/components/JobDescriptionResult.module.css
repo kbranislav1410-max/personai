@@ -37,10 +37,106 @@
   max-width: 600px;
 }
 
+.resultHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
 .heading {
   font-size: 1.125rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
+}
+
+.saveButton {
+  padding: 0.4rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.saveButton:hover {
+  background: #15803d;
+}
+
+.savedBadge {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #16a34a;
+}
+
+.saveForm {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.saveLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.saveRow {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.saveInput {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: inherit;
+}
+
+.saveInput:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+.saveConfirmButton {
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.saveConfirmButton:hover {
+  background: #15803d;
+}
+
+.saveCancelButton {
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.saveCancelButton:hover {
+  background: #f3f4f6;
 }
 
 .content {
