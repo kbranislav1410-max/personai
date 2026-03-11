@@ -6,6 +6,11 @@ import styles from "./Sidebar.module.css";
 
 const navItems = [
   { href: "/", label: "Job Description Generator" },
+  { href: "/pozicie", label: "Pozície" },
+  { href: "/uchadzaci", label: "Uchádzači" },
+  { href: "/analyza-zivotopisov", label: "Analýza životopisov" },
+  { href: "/priprava-na-pohovor", label: "Príprava na pohovor" },
+  { href: "/otazka-a-ukolovanie", label: "Otázka a úkolovanie" },
 ];
 
 export default function Sidebar() {
