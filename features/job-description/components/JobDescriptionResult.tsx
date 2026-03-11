@@ -15,7 +15,7 @@ export default function JobDescriptionResult({
     return (
       <div className={styles.status} aria-live="polite">
         <span className={styles.spinner} aria-hidden="true" />
-        Generating job description…
+        Generuje sa pracovná ponuka…
       </div>
     );
   }
@@ -34,7 +34,7 @@ export default function JobDescriptionResult({
 
   return (
     <section className={styles.result}>
-      <h2 className={styles.heading}>Generated Job Description</h2>
+      <h2 className={styles.heading}>Vygenerovaná pracovná ponuka</h2>
       <pre className={styles.content}>{result}</pre>
     </section>
   );

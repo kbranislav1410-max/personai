@@ -20,7 +20,7 @@ export default function JobDescriptionGenerator() {
       setResult(response.content);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Something went wrong. Please try again."
+        err instanceof Error ? err.message : "Niečo sa pokazilo. Skúste to znova."
       );
     } finally {
       setIsLoading(false);

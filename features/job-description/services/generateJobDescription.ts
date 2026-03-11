@@ -15,6 +15,13 @@ export async function generateJobDescription(
       seniority: data.seniority,
       location: data.location,
       employmentType: data.employmentType,
+      benefits: data.benefits,
+      companyInfo: data.companyInfo,
+      salary: data.salary,
+      languageSkills: data.languageSkills,
+      driverLicense: data.driverLicense,
+      certificates: data.certificates,
+      education: data.education,
     }),
   });
 

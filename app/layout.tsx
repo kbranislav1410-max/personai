@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="sk">
       <body className="appShell">
         <Sidebar />
         <main className="appContent">{children}</main>

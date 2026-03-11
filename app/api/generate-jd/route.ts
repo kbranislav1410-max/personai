@@ -12,8 +12,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  const { description, language, seniority, location, employmentType } =
-    (body as Record<string, unknown>) ?? {};
+  const {
+    description,
+    language,
+    seniority,
+    location,
+    employmentType,
+    benefits,
+    companyInfo,
+    salary,
+    languageSkills,
+    driverLicense,
+    certificates,
+    education,
+  } = (body as Record<string, unknown>) ?? {};
 
   if (typeof description !== "string" || description.trim().length === 0) {
     return NextResponse.json(
@@ -45,12 +57,19 @@ export async function POST(req: NextRequest) {
       seniority: typeof seniority === "string" ? seniority : undefined,
       location: typeof location === "string" ? location : undefined,
       employmentType: typeof employmentType === "string" ? employmentType : undefined,
+      benefits: typeof benefits === "string" ? benefits : undefined,
+      companyInfo: typeof companyInfo === "string" ? companyInfo : undefined,
+      salary: typeof salary === "string" ? salary : undefined,
+      languageSkills: typeof languageSkills === "string" ? languageSkills : undefined,
+      driverLicense: typeof driverLicense === "string" ? driverLicense : undefined,
+      certificates: typeof certificates === "string" ? certificates : undefined,
+      education: typeof education === "string" ? education : undefined,
     });
     return NextResponse.json({ jobDescription }, { status: 200 });
   } catch (err) {
     console.error("[generate-jd] Service error:", err);
     return NextResponse.json(
-      { error: "Failed to generate job description. Please try again later." },
+      { error: "Generovanie pracovnej ponuky zlyhalo. Skúste to neskôr." },
       { status: 500 }
     );
   }

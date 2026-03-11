@@ -7,6 +7,13 @@ export interface GenerateJobDescriptionInput {
   seniority?: string;
   location?: string;
   employmentType?: string;
+  benefits?: string;
+  companyInfo?: string;
+  salary?: string;
+  languageSkills?: string;
+  driverLicense?: string;
+  certificates?: string;
+  education?: string;
 }
 
 /**
