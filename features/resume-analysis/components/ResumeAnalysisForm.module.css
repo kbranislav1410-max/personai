@@ -1,0 +1,164 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  max-width: 640px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.noPositions {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.6;
+  padding: 0.75rem 1rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .noPositions {
+    background: #1f2937;
+    border-color: #374151;
+    color: #9ca3af;
+  }
+}
+
+.select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: #fff;
+  color: inherit;
+  cursor: pointer;
+  appearance: auto;
+}
+
+.select:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .select {
+    background: #1f2937;
+    border-color: #374151;
+    color: #e5e7eb;
+  }
+}
+
+.fileInput {
+  padding: 0.4rem 0;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.fileInput:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.fileList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-top: 0.25rem;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.375rem 0.625rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .fileItem {
+    background: #1e3a5f;
+    border-color: #1d4ed8;
+  }
+}
+
+.fileName {
+  color: #1d4ed8;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (prefers-color-scheme: dark) {
+  .fileName {
+    color: #93c5fd;
+  }
+}
+
+.removeFile {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.2rem;
+  flex-shrink: 0;
+}
+
+.removeFile:hover {
+  color: #b91c1c;
+}
+
+.removeFile:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  padding: 0.65rem 1.5rem;
+  background: #2563eb;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.15s;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
