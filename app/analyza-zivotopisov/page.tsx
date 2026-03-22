@@ -13,6 +13,10 @@ export default function AnalyzaZivotopisovPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<AnalysisResult[]>([]);
+  const [currentPosition, setCurrentPosition] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   async function handleSubmit(positionId: string, files: File[]) {
     const position = positions.find((p) => p.id === positionId);
@@ -21,6 +25,7 @@ export default function AnalyzaZivotopisovPage() {
     setIsLoading(true);
     setError(null);
     setResults([]);
+    setCurrentPosition({ id: position.id, title: position.title });
 
     try {
       const response = await analyzeResumesClient({
@@ -58,6 +63,8 @@ export default function AnalyzaZivotopisovPage() {
         results={results}
         isLoading={isLoading}
         error={error}
+        positionId={currentPosition?.id}
+        positionTitle={currentPosition?.title}
       />
     </>
   );

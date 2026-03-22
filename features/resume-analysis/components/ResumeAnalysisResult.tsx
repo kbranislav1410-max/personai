@@ -2,22 +2,43 @@
 
 import { useState } from "react";
 import { ResumeAnalysisResult as AnalysisResult } from "../types";
+import { useCandidates } from "@/features/candidates/hooks/useCandidates";
 import styles from "./ResumeAnalysisResult.module.css";
 
 interface Props {
   results: AnalysisResult[];
   isLoading: boolean;
   error: string | null;
+  positionId?: string;
+  positionTitle?: string;
 }
 
 export default function ResumeAnalysisResult({
   results,
   isLoading,
   error,
+  positionId,
+  positionTitle,
 }: Props) {
+  const { addCandidate } = useCandidates();
   const [expandedIndex, setExpandedIndex] = useState<number | null>(
     results.length === 1 ? 0 : null
   );
+  const [savedIndices, setSavedIndices] = useState<Set<number>>(new Set());
+
+  function handleSave(result: AnalysisResult, index: number) {
+    addCandidate({
+      filename: result.filename,
+      analysis: result.analysis,
+      positionId: positionId ?? "",
+      positionTitle: positionTitle ?? "",
+    });
+    setSavedIndices((prev) => {
+      const next = new Set(prev);
+      next.add(index);
+      return next;
+    });
+  }
 
   if (isLoading) {
     return (
@@ -55,16 +76,29 @@ export default function ResumeAnalysisResult({
           <li key={`${result.filename}-${index}`} className={styles.card}>
             <div className={styles.cardHeader}>
               <span className={styles.filename}>{result.filename}</span>
-              <button
-                type="button"
-                className={styles.toggleButton}
-                onClick={() =>
-                  setExpandedIndex(expandedIndex === index ? null : index)
-                }
-                aria-expanded={expandedIndex === index}
-              >
-                {expandedIndex === index ? "Skryť" : "Zobraziť analýzu"}
-              </button>
+              <div className={styles.cardActions}>
+                {savedIndices.has(index) ? (
+                  <span className={styles.savedBadge}>✓ Uložený</span>
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.saveButton}
+                    onClick={() => handleSave(result, index)}
+                  >
+                    Uložiť ako uchádzača
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className={styles.toggleButton}
+                  onClick={() =>
+                    setExpandedIndex(expandedIndex === index ? null : index)
+                  }
+                  aria-expanded={expandedIndex === index}
+                >
+                  {expandedIndex === index ? "Skryť" : "Zobraziť analýzu"}
+                </button>
+              </div>
             </div>
 
             {expandedIndex === index && (
