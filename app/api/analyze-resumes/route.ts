@@ -2,16 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { analyzeResumes } from "@/features/resume-analysis/services/ResumeAnalysisService";
 import { ResumeFile } from "@/features/resume-analysis/types";
 import { PDFParse } from "pdf-parse";
+import mammoth from "mammoth";
 
 const MAX_RESUMES = 10;
 const MAX_RESUME_TEXT_LENGTH = 50000;
 
 async function extractText(file: File): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
-  if (file.name.toLowerCase().endsWith(".pdf")) {
+  const name = file.name.toLowerCase();
+  if (name.endsWith(".pdf")) {
     const parser = new PDFParse({ data: buffer });
     const result = await parser.getText();
     return result.text;
+  }
+  if (name.endsWith(".docx")) {
+    const result = await mammoth.extractRawText({ buffer });
+    return result.value;
   }
   return buffer.toString("utf-8");
 }
