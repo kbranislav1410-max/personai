@@ -23,18 +23,11 @@ export default function AnalyzaZivotopisovPage() {
     setResults([]);
 
     try {
-      const resumes = await Promise.all(
-        files.map(async (file) => ({
-          filename: file.name,
-          text: await file.text(),
-        }))
-      );
-
       const response = await analyzeResumesClient({
         positionId: position.id,
         positionTitle: position.title,
         positionContent: position.content,
-        resumes,
+        files,
       });
 
       setResults(response.results);

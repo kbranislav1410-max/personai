@@ -5,18 +5,21 @@ import {
 
 /**
  * Calls the /api/analyze-resumes endpoint and returns the AI analysis results.
+ * Files are sent as multipart/form-data so the server can handle PDFs.
  */
 export async function analyzeResumesClient(
   request: AnalyzeResumesRequest
 ): Promise<AnalyzeResumesResponse> {
+  const formData = new FormData();
+  formData.append("positionTitle", request.positionTitle);
+  formData.append("positionContent", request.positionContent);
+  for (const file of request.files) {
+    formData.append("resumes", file);
+  }
+
   const res = await fetch("/api/analyze-resumes", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      positionTitle: request.positionTitle,
-      positionContent: request.positionContent,
-      resumes: request.resumes,
-    }),
+    body: formData,
   });
 
   const json = await res.json();

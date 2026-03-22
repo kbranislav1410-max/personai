@@ -14,7 +14,7 @@ export interface AnalyzeResumesRequest {
   positionId: string;
   positionTitle: string;
   positionContent: string;
-  resumes: ResumeFile[];
+  files: File[];
 }
 
 export interface AnalyzeResumesResponse {

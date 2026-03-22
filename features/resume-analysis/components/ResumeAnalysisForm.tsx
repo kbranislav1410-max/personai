@@ -74,14 +74,14 @@ export default function ResumeAnalysisForm({
           Nahrajte životopisy
         </label>
         <p className={styles.hint}>
-          Podporované formáty: .txt. Môžete nahrať viacero súborov naraz (max.
-          10).
+          Podporované formáty: .pdf, .txt. Môžete nahrať viacero súborov naraz
+          (max. 10).
         </p>
         <input
           ref={fileInputRef}
           id="cv-upload"
           type="file"
-          accept=".txt,text/plain"
+          accept=".pdf,.txt,application/pdf,text/plain"
           multiple
           className={styles.fileInput}
           onChange={handleFileChange}
