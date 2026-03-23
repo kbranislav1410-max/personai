@@ -34,6 +34,8 @@ export interface GenerateJobDescriptionInput {
   educationFields?: string;
 
   // Company profile
+  companyName?: string;
+  industry?: string;
   benefits?: string;
   companyInfo?: string;
   toneOfVoice?: string;

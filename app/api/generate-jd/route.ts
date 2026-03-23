@@ -76,6 +76,8 @@ export async function POST(req: NextRequest) {
       educationFields: optStr(b.educationFields),
 
       benefits: optStr(b.benefits),
+      companyName: optStr(b.companyName),
+      industry: optStr(b.industry),
       companyInfo: optStr(b.companyInfo),
       toneOfVoice: optStr(b.toneOfVoice),
       toneOfVoiceCustom: optStr(b.toneOfVoiceCustom),

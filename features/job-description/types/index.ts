@@ -154,6 +154,8 @@ export interface JobDescriptionFormData {
   language: "SK" | "EN";
 
   // Auto-filled from company profile
+  companyName?: string;
+  industry?: string;
   benefits: string;
   companyInfo: string;
   toneOfVoice?: string;

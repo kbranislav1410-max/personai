@@ -54,6 +54,8 @@ export async function generateJobDescription(
 
       // Company profile
       benefits: data.benefits,
+      companyName: data.companyName,
+      industry: data.industry,
       companyInfo: data.companyInfo,
       toneOfVoice: data.toneOfVoice,
       toneOfVoiceCustom: data.toneOfVoiceCustom,
