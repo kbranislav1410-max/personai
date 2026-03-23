@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useCompany } from "@/features/company/hooks/useCompany";
 import {
   CompanyProfile,
@@ -13,10 +13,18 @@ import {
 import styles from "./page.module.css";
 
 export default function MojaFirmaPage() {
-  const { profile, saveProfile } = useCompany();
+  const { profile, saveProfile, loaded } = useCompany();
   const [form, setForm] = useState<CompanyProfile | null>(null);
   const [saved, setSaved] = useState(false);
-  const [editing, setEditing] = useState(!profile.name);
+  const [editing, setEditing] = useState(true); // start in edit; corrected after load
+
+  // Once localStorage data is available, switch to view mode if profile has data
+  useEffect(() => {
+    if (loaded) {
+      setEditing(!profile.name);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded]);
 
   const logoRef = useRef<HTMLInputElement>(null);
   const brandRef = useRef<HTMLInputElement>(null);

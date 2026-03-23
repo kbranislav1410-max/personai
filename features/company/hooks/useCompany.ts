@@ -25,10 +25,12 @@ function saveToStorage(profile: CompanyProfile): void {
 
 export function useCompany() {
   const [profile, setProfile] = useState<CompanyProfile>(EMPTY_COMPANY_PROFILE);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setProfile(loadProfile());
+    setLoaded(true);
   }, []);
 
   const saveProfile = useCallback((updated: CompanyProfile) => {
@@ -36,5 +38,5 @@ export function useCompany() {
     setProfile(updated);
   }, []);
 
-  return { profile, saveProfile };
+  return { profile, saveProfile, loaded };
 }
