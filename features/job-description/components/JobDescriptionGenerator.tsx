@@ -50,7 +50,12 @@ export default function JobDescriptionGenerator() {
   }
 
   const suggestedTitle = lastFormData
-    ? [lastFormData.seniority, lastFormData.roleDescription.slice(0, 50)]
+    ? [
+        lastFormData.seniority,
+        (lastFormData.positionTemplate === "Vlastná pozícia..."
+          ? lastFormData.positionCustom
+          : lastFormData.positionTemplate) || lastFormData.roleDescription.slice(0, 50),
+      ]
         .filter(Boolean)
         .join(" – ")
     : undefined;

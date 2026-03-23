@@ -3,6 +3,14 @@ import { generateJobDescriptionText } from "@/features/job-description/services/
 
 const DESCRIPTION_MAX_LENGTH = 2000;
 
+function optStr(v: unknown): string | undefined {
+  return typeof v === "string" && v.length > 0 ? v : undefined;
+}
+
+function optBool(v: unknown): boolean | undefined {
+  return typeof v === "boolean" ? v : undefined;
+}
+
 export async function POST(req: NextRequest) {
   let body: unknown;
 
@@ -12,22 +20,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  const {
-    description,
-    language,
-    seniority,
-    location,
-    employmentType,
-    benefits,
-    companyInfo,
-    salary,
-    languageSkills,
-    driverLicense,
-    certificates,
-    education,
-    toneOfVoice,
-    toneOfVoiceCustom,
-  } = (body as Record<string, unknown>) ?? {};
+  const b = (body as Record<string, unknown>) ?? {};
+
+  const description = b.description;
 
   if (typeof description !== "string" || description.trim().length === 0) {
     return NextResponse.json(
@@ -38,13 +33,12 @@ export async function POST(req: NextRequest) {
 
   if (description.length > DESCRIPTION_MAX_LENGTH) {
     return NextResponse.json(
-      {
-        error: `Field 'description' must not exceed ${DESCRIPTION_MAX_LENGTH} characters.`,
-      },
+      { error: `Field 'description' must not exceed ${DESCRIPTION_MAX_LENGTH} characters.` },
       { status: 400 }
     );
   }
 
+  const language = b.language;
   if (language !== "SK" && language !== "EN") {
     return NextResponse.json(
       { error: "Field 'language' is required and must be 'SK' or 'EN'." },
@@ -56,18 +50,35 @@ export async function POST(req: NextRequest) {
     const jobDescription = await generateJobDescriptionText({
       description: description.trim(),
       language,
-      seniority: typeof seniority === "string" ? seniority : undefined,
-      location: typeof location === "string" ? location : undefined,
-      employmentType: typeof employmentType === "string" ? employmentType : undefined,
-      benefits: typeof benefits === "string" ? benefits : undefined,
-      companyInfo: typeof companyInfo === "string" ? companyInfo : undefined,
-      salary: typeof salary === "string" ? salary : undefined,
-      languageSkills: typeof languageSkills === "string" ? languageSkills : undefined,
-      driverLicense: typeof driverLicense === "string" ? driverLicense : undefined,
-      certificates: typeof certificates === "string" ? certificates : undefined,
-      education: typeof education === "string" ? education : undefined,
-      toneOfVoice: typeof toneOfVoice === "string" ? toneOfVoice : undefined,
-      toneOfVoiceCustom: typeof toneOfVoiceCustom === "string" ? toneOfVoiceCustom : undefined,
+
+      positionTemplate: optStr(b.positionTemplate),
+      positionCustom: optStr(b.positionCustom),
+      jobContent: optStr(b.jobContent),
+      seniority: optStr(b.seniority),
+      teamSize: optStr(b.teamSize),
+      teamType: optStr(b.teamType),
+      teamAverageAge: optStr(b.teamAverageAge),
+      positionGoal: optStr(b.positionGoal),
+      whyApply: optStr(b.whyApply),
+
+      mustHave: optStr(b.mustHave),
+      niceToHave: optStr(b.niceToHave),
+
+      location: optStr(b.location),
+      employmentType: optStr(b.employmentType),
+      salary: optStr(b.salary),
+
+      languageSkillsSerialized: optStr(b.languageSkillsSerialized),
+      driverLicense: optStr(b.driverLicense),
+      certificates: optStr(b.certificates),
+      educationRequired: optBool(b.educationRequired),
+      educationLevel: optStr(b.educationLevel),
+      educationFields: optStr(b.educationFields),
+
+      benefits: optStr(b.benefits),
+      companyInfo: optStr(b.companyInfo),
+      toneOfVoice: optStr(b.toneOfVoice),
+      toneOfVoiceCustom: optStr(b.toneOfVoiceCustom),
     });
     return NextResponse.json({ jobDescription }, { status: 200 });
   } catch (err) {

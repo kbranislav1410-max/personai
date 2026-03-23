@@ -4,27 +4,42 @@ import { generateText } from "@/lib/ai/OpenAIClient";
 export interface GenerateJobDescriptionInput {
   description: string;
   language: "SK" | "EN";
+
+  // Section 1
+  positionTemplate?: string;
+  positionCustom?: string;
+  jobContent?: string;
   seniority?: string;
+  teamSize?: string;
+  teamType?: string;
+  teamAverageAge?: string;
+  positionGoal?: string;
+  whyApply?: string;
+
+  // Section 2
+  mustHave?: string;
+  niceToHave?: string;
+
+  // Section 3
   location?: string;
   employmentType?: string;
-  benefits?: string;
-  companyInfo?: string;
   salary?: string;
-  languageSkills?: string;
+
+  // Section 4
+  languageSkillsSerialized?: string;
   driverLicense?: string;
   certificates?: string;
-  education?: string;
+  educationRequired?: boolean;
+  educationLevel?: string;
+  educationFields?: string;
+
+  // Company profile
+  benefits?: string;
+  companyInfo?: string;
   toneOfVoice?: string;
   toneOfVoiceCustom?: string;
 }
 
-/**
- * Server-side service that orchestrates prompt building and AI text generation
- * to produce a complete job description.
- *
- * This is the single entry-point for the job-description feature's generation
- * logic. The API route delegates here; it only handles HTTP concerns itself.
- */
 export async function generateJobDescriptionText(
   input: GenerateJobDescriptionInput
 ): Promise<string> {
