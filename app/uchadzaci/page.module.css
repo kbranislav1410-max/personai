@@ -111,6 +111,35 @@
   background: #1d4ed8;
 }
 
+.prepButton {
+  padding: 0.35rem 0.875rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: transparent;
+  color: #7c3aed;
+  border: 1px solid #c4b5fd;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.prepButton:hover {
+  background: #f5f3ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .prepButton {
+    color: #a78bfa;
+    border-color: #4c1d95;
+  }
+
+  .prepButton:hover {
+    background: #2e1065;
+  }
+}
+
 .deleteButton {
   padding: 0.35rem 0.875rem;
   font-size: 0.8rem;

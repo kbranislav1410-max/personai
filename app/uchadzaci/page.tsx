@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useCandidates } from "@/features/candidates/hooks/useCandidates";
 import styles from "./page.module.css";
 
@@ -77,6 +78,12 @@ export default function UchadzaciPage() {
                   </span>
                 </div>
                 <div className={styles.cardActions}>
+                  <Link
+                    href={`/priprava-na-pohovor?candidateId=${candidate.id}`}
+                    className={styles.prepButton}
+                  >
+                    Pripraviť pohovor
+                  </Link>
                   <button
                     type="button"
                     className={styles.toggleButton}

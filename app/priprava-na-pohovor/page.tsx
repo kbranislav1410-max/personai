@@ -1,5 +1,12 @@
+"use client";
+
+import { Suspense } from "react";
+import InterviewPrepContent from "./InterviewPrepContent";
+
 export default function PripravaNaPohovorPage() {
   return (
-    <h1>Príprava na pohovor</h1>
+    <Suspense>
+      <InterviewPrepContent />
+    </Suspense>
   );
 }
