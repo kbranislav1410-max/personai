@@ -105,8 +105,8 @@
 
 .input:focus,
 .select:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px #dbeafe;
+  border-color: #00f5a0;
+  box-shadow: 0 0 0 3px rgba(0, 245, 160, 0.15);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -119,8 +119,8 @@
 
   .input:focus,
   .select:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px #1e3a5f;
+    border-color: #00f5a0;
+    box-shadow: 0 0 0 3px rgba(0, 212, 138, 0.15);
   }
 }
 
@@ -138,8 +138,8 @@
 }
 
 .textarea:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px #dbeafe;
+  border-color: #00f5a0;
+  box-shadow: 0 0 0 3px rgba(0, 245, 160, 0.15);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -150,8 +150,8 @@
   }
 
   .textarea:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px #1e3a5f;
+    border-color: #00f5a0;
+    box-shadow: 0 0 0 3px rgba(0, 212, 138, 0.15);
   }
 }
 
@@ -219,8 +219,8 @@
   padding: 0.45rem 1rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #2563eb;
-  border: 1px solid #2563eb;
+  color: #00f5a0;
+  border: 1px solid #00f5a0;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.15s;
@@ -229,17 +229,17 @@
 }
 
 .uploadButton:hover {
-  background: #eff6ff;
+  background: rgba(0, 245, 160, 0.12);
 }
 
 @media (prefers-color-scheme: dark) {
   .uploadButton {
-    color: #60a5fa;
-    border-color: #1d4ed8;
+    color: #00f5a0;
+    border-color: #00d48a;
   }
 
   .uploadButton:hover {
-    background: #1e3a5f;
+    background: rgba(0, 212, 138, 0.15);
   }
 }
 
@@ -346,8 +346,8 @@
 }
 
 .socialSelect:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px #dbeafe;
+  border-color: #00f5a0;
+  box-shadow: 0 0 0 3px rgba(0, 245, 160, 0.15);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -358,8 +358,8 @@
   }
 
   .socialSelect:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px #1e3a5f;
+    border-color: #00f5a0;
+    box-shadow: 0 0 0 3px rgba(0, 212, 138, 0.15);
   }
 }
 
@@ -376,8 +376,8 @@
 }
 
 .socialInput:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px #dbeafe;
+  border-color: #00f5a0;
+  box-shadow: 0 0 0 3px rgba(0, 245, 160, 0.15);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -388,8 +388,8 @@
   }
 
   .socialInput:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px #1e3a5f;
+    border-color: #00f5a0;
+    box-shadow: 0 0 0 3px rgba(0, 212, 138, 0.15);
   }
 }
 
@@ -433,8 +433,8 @@
   padding: 0.45rem 0.9rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #2563eb;
-  border: 1px dashed #93c5fd;
+  color: #00f5a0;
+  border: 1px dashed #00f5a0;
   border-radius: 6px;
   background: transparent;
   cursor: pointer;
@@ -443,19 +443,19 @@
 }
 
 .addButton:hover {
-  background: #eff6ff;
-  border-color: #2563eb;
+  background: rgba(0, 245, 160, 0.12);
+  border-color: #00f5a0;
 }
 
 @media (prefers-color-scheme: dark) {
   .addButton {
-    color: #60a5fa;
-    border-color: #1e40af;
+    color: #00f5a0;
+    border-color: #00d48a;
   }
 
   .addButton:hover {
-    background: #1e3a5f;
-    border-color: #3b82f6;
+    background: rgba(0, 212, 138, 0.15);
+    border-color: #00f5a0;
   }
 }
 
@@ -470,8 +470,8 @@
   padding: 0.65rem 1.75rem;
   font-size: 0.95rem;
   font-weight: 700;
-  background: #2563eb;
-  color: #fff;
+  background: #00f5a0;
+  color: #1a3c34;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -479,7 +479,7 @@
 }
 
 .button:hover {
-  background: #1d4ed8;
+  background: #00d48a;
 }
 
 .savedBadge {

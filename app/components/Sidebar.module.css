@@ -5,9 +5,9 @@
   bottom: 1rem;
   width: var(--sidebar-width);
   height: auto;
-  background: rgba(26, 60, 52, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: #1a3c34;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   color: #e8f5f0;
   display: flex;
   flex-direction: column;
@@ -59,8 +59,8 @@
 }
 
 .navLink.active {
-  background: #2563eb;
-  color: #ffffff;
+  background: #00f5a0;
+  color: #1a3c34;
   font-weight: 600;
 }
 

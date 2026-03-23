@@ -134,15 +134,15 @@
 .select:focus,
 .textarea:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px #dbeafe;
+  border-color: #00f5a0;
+  box-shadow: 0 0 0 3px rgba(0, 245, 160, 0.15);
 }
 
 @media (prefers-color-scheme: dark) {
   .input:focus,
   .select:focus,
   .textarea:focus {
-    box-shadow: 0 0 0 3px #1e3a5f;
+    box-shadow: 0 0 0 3px rgba(0, 212, 138, 0.15);
   }
 }
 
@@ -178,13 +178,13 @@
 }
 
 .dynamicSelect:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px #dbeafe;
+  border-color: #00f5a0;
+  box-shadow: 0 0 0 3px rgba(0, 245, 160, 0.15);
 }
 
 @media (prefers-color-scheme: dark) {
   .dynamicSelect:focus {
-    box-shadow: 0 0 0 3px #1e3a5f;
+    box-shadow: 0 0 0 3px rgba(0, 212, 138, 0.15);
   }
 }
 
@@ -203,13 +203,13 @@
 }
 
 .dynamicInput:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px #dbeafe;
+  border-color: #00f5a0;
+  box-shadow: 0 0 0 3px rgba(0, 245, 160, 0.15);
 }
 
 @media (prefers-color-scheme: dark) {
   .dynamicInput:focus {
-    box-shadow: 0 0 0 3px #1e3a5f;
+    box-shadow: 0 0 0 3px rgba(0, 212, 138, 0.15);
   }
 }
 
@@ -253,8 +253,8 @@
   padding: 0.4rem 0.85rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #2563eb;
-  border: 1px dashed #93c5fd;
+  color: #00f5a0;
+  border: 1px dashed #00f5a0;
   border-radius: 6px;
   background: transparent;
   cursor: pointer;
@@ -263,19 +263,19 @@
 }
 
 .addBtn:hover {
-  background: #eff6ff;
-  border-color: #2563eb;
+  background: rgba(0, 245, 160, 0.12);
+  border-color: #00f5a0;
 }
 
 @media (prefers-color-scheme: dark) {
   .addBtn {
-    color: #60a5fa;
-    border-color: #1e40af;
+    color: #00f5a0;
+    border-color: #00d48a;
   }
 
   .addBtn:hover {
-    background: #1e3a5f;
-    border-color: #3b82f6;
+    background: rgba(0, 212, 138, 0.15);
+    border-color: #00f5a0;
   }
 }
 
@@ -318,8 +318,8 @@
 }
 
 .toggleBtnActive {
-  background: #2563eb;
-  color: #fff;
+  background: #00f5a0;
+  color: #1a3c34;
   font-weight: 600;
 }
 
@@ -347,8 +347,8 @@
   padding: 0.625rem 1.5rem;
   font-size: 1rem;
   font-weight: 600;
-  background: #2563eb;
-  color: #fff;
+  background: #00f5a0;
+  color: #1a3c34;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -356,7 +356,7 @@
 }
 
 .button:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: #00d48a;
 }
 
 .button:disabled {

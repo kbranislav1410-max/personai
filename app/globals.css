@@ -1,6 +1,6 @@
 :root {
-  --background: #f7fbf9;
-  --foreground: #1a3c34;
+  --background: #393939;
+  --foreground: #e8f5f0;
   --sidebar-width: 220px;
   --sidebar-offset: calc(var(--sidebar-width) + 1rem + 1rem); /* width + left gap + right gap */
   --topbar-height: 56px;

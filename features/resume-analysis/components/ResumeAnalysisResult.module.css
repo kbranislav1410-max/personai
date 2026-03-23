@@ -11,7 +11,7 @@
   width: 20px;
   height: 20px;
   border: 3px solid #e5e7eb;
-  border-top-color: #2563eb;
+  border-top-color: #00f5a0;
   border-radius: 50%;
   animation: spin 0.75s linear infinite;
   flex-shrink: 0;
@@ -147,8 +147,8 @@
   padding: 0.35rem 0.875rem;
   font-size: 0.8rem;
   font-weight: 600;
-  background: #2563eb;
-  color: #fff;
+  background: #00f5a0;
+  color: #1a3c34;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -157,7 +157,7 @@
 }
 
 .toggleButton:hover {
-  background: #1d4ed8;
+  background: #00d48a;
 }
 
 .analysis {
@@ -176,12 +176,12 @@
   font-weight: 700;
   margin-top: 1rem;
   margin-bottom: 0.35rem;
-  color: #1d4ed8;
+  color: #00d48a;
 }
 
 @media (prefers-color-scheme: dark) {
   .analysisHeading {
-    color: #93c5fd;
+    color: #00f5a0;
   }
 }
 
