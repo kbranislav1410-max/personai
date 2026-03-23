@@ -11,6 +11,8 @@ export interface JobDescriptionFormData {
   certificates: string;
   education: string;
   language: "SK" | "EN";
+  toneOfVoice?: string;
+  toneOfVoiceCustom?: string;
 }
 
 export interface JobDescriptionResult {

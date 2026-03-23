@@ -14,6 +14,8 @@ export interface GenerateJobDescriptionInput {
   driverLicense?: string;
   certificates?: string;
   education?: string;
+  toneOfVoice?: string;
+  toneOfVoiceCustom?: string;
 }
 
 /**

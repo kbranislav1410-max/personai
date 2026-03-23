@@ -22,6 +22,8 @@ export async function generateJobDescription(
       driverLicense: data.driverLicense,
       certificates: data.certificates,
       education: data.education,
+      toneOfVoice: data.toneOfVoice,
+      toneOfVoiceCustom: data.toneOfVoiceCustom,
     }),
   });
 

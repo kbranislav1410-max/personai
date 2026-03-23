@@ -25,6 +25,8 @@ export async function POST(req: NextRequest) {
     driverLicense,
     certificates,
     education,
+    toneOfVoice,
+    toneOfVoiceCustom,
   } = (body as Record<string, unknown>) ?? {};
 
   if (typeof description !== "string" || description.trim().length === 0) {
@@ -64,6 +66,8 @@ export async function POST(req: NextRequest) {
       driverLicense: typeof driverLicense === "string" ? driverLicense : undefined,
       certificates: typeof certificates === "string" ? certificates : undefined,
       education: typeof education === "string" ? education : undefined,
+      toneOfVoice: typeof toneOfVoice === "string" ? toneOfVoice : undefined,
+      toneOfVoiceCustom: typeof toneOfVoiceCustom === "string" ? toneOfVoiceCustom : undefined,
     });
     return NextResponse.json({ jobDescription }, { status: 200 });
   } catch (err) {

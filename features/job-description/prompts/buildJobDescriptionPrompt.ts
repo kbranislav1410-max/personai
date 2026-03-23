@@ -11,6 +11,8 @@ interface BuildJobDescriptionPromptInput {
   certificates?: string;
   education?: string;
   language: "SK" | "EN";
+  toneOfVoice?: string;
+  toneOfVoiceCustom?: string;
 }
 
 /**
@@ -33,6 +35,8 @@ export function buildJobDescriptionPrompt(
     certificates,
     education,
     language,
+    toneOfVoice,
+    toneOfVoiceCustom,
   } = input;
 
   const contextLines: string[] = [`Role description: ${description}`];
@@ -49,6 +53,14 @@ export function buildJobDescriptionPrompt(
 
   const context = contextLines.join("\n");
 
+  const toneLines: string[] = [];
+  if (toneOfVoice) toneLines.push(`Tone of voice style: ${toneOfVoice}`);
+  if (toneOfVoiceCustom) toneLines.push(`Additional tone guidance: ${toneOfVoiceCustom}`);
+  const toneInstruction =
+    toneLines.length > 0
+      ? `\nCommunication style:\n${toneLines.join("\n")}\nApply this tone consistently throughout the entire job description.`
+      : "";
+
   const outputLanguageInstruction =
     language === "SK"
       ? "Write the entire job description in Slovak (slovenčina)."
@@ -57,7 +69,7 @@ export function buildJobDescriptionPrompt(
   return `You are an expert HR copywriter who creates professional, inclusive, and compelling job descriptions.
 
 ${outputLanguageInstruction}
-
+${toneInstruction}
 Use the following role details as input:
 ${context}
 

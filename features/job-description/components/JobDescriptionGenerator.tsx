@@ -19,6 +19,8 @@ export default function JobDescriptionGenerator() {
   const companyInitialData: Partial<JobDescriptionFormData> = {
     ...(profile.description ? { companyInfo: profile.description } : {}),
     ...(profile.benefits ? { benefits: profile.benefits } : {}),
+    ...(profile.toneOfVoice ? { toneOfVoice: profile.toneOfVoice } : {}),
+    ...(profile.toneOfVoiceCustom ? { toneOfVoiceCustom: profile.toneOfVoiceCustom } : {}),
   };
 
   async function handleSubmit(data: JobDescriptionFormData) {
