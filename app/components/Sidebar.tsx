@@ -20,7 +20,14 @@ export default function Sidebar() {
 
   return (
     <nav className={styles.sidebar} aria-label="Main navigation">
-      <div className={styles.logo}>Personalistika AI</div>
+      <div className={styles.logo}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://github.com/user-attachments/assets/51a53a39-d207-4158-924b-69b3f02881a4"
+          alt="Personalistika AI"
+          className={styles.logoImage}
+        />
+      </div>
       <ul className={styles.navList}>
         {navItems.map(({ href, label }) => (
           <li key={href}>
