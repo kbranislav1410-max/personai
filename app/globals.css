@@ -3,6 +3,7 @@
   --foreground: #171717;
   --sidebar-width: 220px;
   --sidebar-offset: calc(var(--sidebar-width) + 1rem + 1rem); /* width + left gap + right gap */
+  --topbar-height: 56px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -52,7 +53,7 @@ a {
   margin-left: var(--sidebar-offset);
   flex: 1;
   min-height: 100vh;
-  padding: 3rem 2rem 4rem;
+  padding: calc(var(--topbar-height) + 2rem) 2rem 4rem;
 }
 
 @media (max-width: 768px) {
