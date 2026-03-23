@@ -6,6 +6,7 @@ import JobDescriptionResult from "./JobDescriptionResult";
 import { generateJobDescription } from "../services/generateJobDescription";
 import { JobDescriptionFormData } from "../types";
 import { usePositions } from "@/features/positions/hooks/usePositions";
+import { useCompany } from "@/features/company/hooks/useCompany";
 
 export default function JobDescriptionGenerator() {
   const [result, setResult] = useState<string | null>(null);
@@ -13,6 +14,12 @@ export default function JobDescriptionGenerator() {
   const [error, setError] = useState<string | null>(null);
   const [lastFormData, setLastFormData] = useState<JobDescriptionFormData | null>(null);
   const { addPosition } = usePositions();
+  const { profile } = useCompany();
+
+  const companyInitialData: Partial<JobDescriptionFormData> = {
+    ...(profile.description ? { companyInfo: profile.description } : {}),
+    ...(profile.benefits ? { benefits: profile.benefits } : {}),
+  };
 
   async function handleSubmit(data: JobDescriptionFormData) {
     setIsLoading(true);
@@ -48,7 +55,7 @@ export default function JobDescriptionGenerator() {
 
   return (
     <>
-      <JobDescriptionForm onSubmit={handleSubmit} isLoading={isLoading} />
+      <JobDescriptionForm onSubmit={handleSubmit} isLoading={isLoading} initialData={companyInitialData} />
       <JobDescriptionResult
         result={result}
         isLoading={isLoading}

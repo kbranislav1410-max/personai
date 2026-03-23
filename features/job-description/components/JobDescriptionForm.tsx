@@ -7,9 +7,10 @@ import styles from "./JobDescriptionForm.module.css";
 interface Props {
   onSubmit: (data: JobDescriptionFormData) => void;
   isLoading: boolean;
+  initialData?: Partial<JobDescriptionFormData>;
 }
 
-export default function JobDescriptionForm({ onSubmit, isLoading }: Props) {
+export default function JobDescriptionForm({ onSubmit, isLoading, initialData }: Props) {
   const [formData, setFormData] = useState<JobDescriptionFormData>({
     roleDescription: "",
     seniority: "",
@@ -23,6 +24,7 @@ export default function JobDescriptionForm({ onSubmit, isLoading }: Props) {
     certificates: "",
     education: "",
     language: "SK",
+    ...initialData,
   });
 
   function handleChange(

@@ -6,6 +6,7 @@ import styles from "./Sidebar.module.css";
 
 const navItems = [
   { href: "/dashboard", label: "Prehľad" },
+  { href: "/moja-firma", label: "Moja firma" },
   { href: "/", label: "Generátor pracovnej ponuky" },
   { href: "/pozicie", label: "Pozície" },
   { href: "/uchadzaci", label: "Uchádzači" },
