@@ -16,6 +16,7 @@ export default function MojaFirmaPage() {
   const { profile, saveProfile } = useCompany();
   const [form, setForm] = useState<CompanyProfile | null>(null);
   const [saved, setSaved] = useState(false);
+  const [editing, setEditing] = useState(!profile.name);
 
   const logoRef = useRef<HTMLInputElement>(null);
   const brandRef = useRef<HTMLInputElement>(null);
@@ -149,6 +150,200 @@ export default function MojaFirmaPage() {
     e.preventDefault();
     saveProfile(current);
     setSaved(true);
+    setEditing(false);
+    setForm(null);
+  }
+
+  function handleEdit() {
+    setForm(profile);
+    setSaved(false);
+    setEditing(true);
+  }
+
+  function handleCancel() {
+    setForm(null);
+    setSaved(false);
+    setEditing(false);
+  }
+
+  // ── View mode (read-only) ──────────────────────────────────────────────────
+  if (!editing && profile.name) {
+    return (
+      <>
+        <div className={styles.viewHeader}>
+          <div>
+            <h1 className={styles.title}>Moja firma</h1>
+          </div>
+          <button className={styles.editButton} onClick={handleEdit}>
+            ✏️ Upraviť
+          </button>
+        </div>
+
+        <div className={styles.viewCard}>
+          {profile.logoDataUrl && (
+            <div className={styles.viewLogoRow}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={profile.logoDataUrl}
+                alt="Logo firmy"
+                className={styles.viewLogo}
+              />
+            </div>
+          )}
+
+          <div className={styles.viewSection}>
+            <h2 className={styles.viewSectionTitle}>Základné informácie</h2>
+            <dl className={styles.viewDl}>
+              <dt className={styles.viewDt}>Názov firmy</dt>
+              <dd className={styles.viewDd}>{profile.name}</dd>
+
+              {profile.industry && (
+                <>
+                  <dt className={styles.viewDt}>Odvetvie</dt>
+                  <dd className={styles.viewDd}>{profile.industry}</dd>
+                </>
+              )}
+
+              {profile.description && (
+                <>
+                  <dt className={styles.viewDt}>Popis firmy</dt>
+                  <dd className={`${styles.viewDd} ${styles.viewMultiline}`}>
+                    {profile.description}
+                  </dd>
+                </>
+              )}
+
+              {profile.benefits && (
+                <>
+                  <dt className={styles.viewDt}>Benefity</dt>
+                  <dd className={`${styles.viewDd} ${styles.viewMultiline}`}>
+                    {profile.benefits}
+                  </dd>
+                </>
+              )}
+
+              {profile.toneOfVoice && (
+                <>
+                  <dt className={styles.viewDt}>Tone of voice</dt>
+                  <dd className={styles.viewDd}>{profile.toneOfVoice}</dd>
+                </>
+              )}
+
+              {profile.toneOfVoiceCustom && (
+                <>
+                  <dt className={styles.viewDt}>Doplnkový popis tone of voice</dt>
+                  <dd className={`${styles.viewDd} ${styles.viewMultiline}`}>
+                    {profile.toneOfVoiceCustom}
+                  </dd>
+                </>
+              )}
+            </dl>
+          </div>
+
+          {(profile.website ||
+            profile.careerPage ||
+            profile.socialLinks.length > 0) && (
+            <div className={styles.viewSection}>
+              <h2 className={styles.viewSectionTitle}>Online prítomnosť</h2>
+              <dl className={styles.viewDl}>
+                {profile.website && (
+                  <>
+                    <dt className={styles.viewDt}>Webstránka</dt>
+                    <dd className={styles.viewDd}>
+                      <a
+                        href={profile.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.viewLink}
+                      >
+                        {profile.website}
+                      </a>
+                    </dd>
+                  </>
+                )}
+
+                {profile.careerPage && (
+                  <>
+                    <dt className={styles.viewDt}>Kariérna stránka</dt>
+                    <dd className={styles.viewDd}>
+                      <a
+                        href={profile.careerPage}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.viewLink}
+                      >
+                        {profile.careerPage}
+                      </a>
+                    </dd>
+                  </>
+                )}
+
+                {profile.socialLinks.length > 0 && (
+                  <>
+                    <dt className={styles.viewDt}>Sociálne siete</dt>
+                    <dd className={styles.viewDd}>
+                      <ul className={styles.viewSocialList}>
+                        {profile.socialLinks.map((sl, i) => (
+                          <li key={i} className={styles.viewSocialItem}>
+                            <span className={styles.viewSocialNetwork}>
+                              {sl.network}:
+                            </span>{" "}
+                            <a
+                              href={sl.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={styles.viewLink}
+                            >
+                              {sl.url}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </>
+                )}
+              </dl>
+            </div>
+          )}
+
+          {(profile.brandManualDataUrl ||
+            profile.otherGuides ||
+            profile.otherInfo) && (
+            <div className={styles.viewSection}>
+              <h2 className={styles.viewSectionTitle}>Materiály a iné</h2>
+              <dl className={styles.viewDl}>
+                {profile.brandManualDataUrl && (
+                  <>
+                    <dt className={styles.viewDt}>Brand manual</dt>
+                    <dd className={styles.viewDd}>
+                      📄 {profile.brandManualName || "brand-manual.pdf"}
+                    </dd>
+                  </>
+                )}
+
+                {profile.otherGuides && (
+                  <>
+                    <dt className={styles.viewDt}>Interné návody a materiály</dt>
+                    <dd className={`${styles.viewDd} ${styles.viewMultiline}`}>
+                      {profile.otherGuides}
+                    </dd>
+                  </>
+                )}
+
+                {profile.otherInfo && (
+                  <>
+                    <dt className={styles.viewDt}>Iné informácie</dt>
+                    <dd className={`${styles.viewDd} ${styles.viewMultiline}`}>
+                      {profile.otherInfo}
+                    </dd>
+                  </>
+                )}
+              </dl>
+            </div>
+          )}
+        </div>
+      </>
+    );
   }
 
   return (
@@ -489,6 +684,15 @@ export default function MojaFirmaPage() {
           <button type="submit" className={styles.button}>
             Uložiť zmeny
           </button>
+          {profile.name && (
+            <button
+              type="button"
+              className={styles.cancelButton}
+              onClick={handleCancel}
+            >
+              Zrušiť
+            </button>
+          )}
           {saved && <span className={styles.savedBadge}>✓ Uložené</span>}
         </div>
       </form>

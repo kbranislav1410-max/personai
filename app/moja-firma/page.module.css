@@ -482,14 +482,202 @@
   background: #00d48a;
 }
 
-.savedBadge {
+/* View mode */
+.viewHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.viewHeader .title {
+  margin-bottom: 0;
+}
+
+.editButton {
+  padding: 0.5rem 1.25rem;
   font-size: 0.875rem;
-  color: #16a34a;
   font-weight: 600;
+  background: #00f5a0;
+  color: #1a3c34;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.editButton:hover {
+  background: #00d48a;
+}
+
+.viewCard {
+  max-width: 740px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.viewLogoRow {
+  margin-bottom: 0.5rem;
+}
+
+.viewLogo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #f9fafb;
+  padding: 8px;
 }
 
 @media (prefers-color-scheme: dark) {
-  .savedBadge {
-    color: #4ade80;
+  .viewLogo {
+    border-color: #374151;
+    background: #111827;
+  }
+}
+
+.viewSection {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  padding: 1.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .viewSection {
+    background: #1f2937;
+    border-color: #374151;
+  }
+}
+
+.viewSectionTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: #111827;
+}
+
+@media (prefers-color-scheme: dark) {
+  .viewSectionTitle {
+    color: #e5e7eb;
+  }
+}
+
+.viewDl {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0.75rem 1.5rem;
+  align-items: baseline;
+}
+
+@media (max-width: 560px) {
+  .viewDl {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}
+
+.viewDt {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding-top: 0.1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .viewDt {
+    color: #9ca3af;
+  }
+}
+
+@media (max-width: 560px) {
+  .viewDt {
+    margin-top: 0.625rem;
+  }
+}
+
+.viewDd {
+  font-size: 0.9rem;
+  color: #111827;
+  line-height: 1.6;
+}
+
+@media (prefers-color-scheme: dark) {
+  .viewDd {
+    color: #e5e7eb;
+  }
+}
+
+.viewMultiline {
+  white-space: pre-wrap;
+}
+
+.viewLink {
+  color: #00d48a;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.viewLink:hover {
+  text-decoration: underline;
+}
+
+.viewSocialList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.viewSocialItem {
+  font-size: 0.9rem;
+}
+
+.viewSocialNetwork {
+  font-weight: 600;
+  color: #374151;
+}
+
+@media (prefers-color-scheme: dark) {
+  .viewSocialNetwork {
+    color: #d1d5db;
+  }
+}
+
+/* Cancel button */
+.cancelButton {
+  padding: 0.65rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.cancelButton:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+@media (prefers-color-scheme: dark) {
+  .cancelButton {
+    color: #9ca3af;
+    border-color: #4b5563;
+  }
+
+  .cancelButton:hover {
+    background: #1f2937;
+    border-color: #6b7280;
   }
 }
