@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import styles from "./Sidebar.module.css";
 
 const navItems = [
+  { href: "/dashboard", label: "Prehľad" },
   { href: "/", label: "Generátor pracovnej ponuky" },
   { href: "/pozicie", label: "Pozície" },
   { href: "/uchadzaci", label: "Uchádzači" },
