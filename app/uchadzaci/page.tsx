@@ -3,11 +3,33 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCandidates } from "@/features/candidates/hooks/useCandidates";
+import { CandidateStatus } from "@/features/candidates/types";
 import styles from "./page.module.css";
 
+type FilterTab = "vsetci" | CandidateStatus;
+
+const TABS: { id: FilterTab; label: string }[] = [
+  { id: "vsetci", label: "Všetci" },
+  { id: "zamestnani", label: "Zamestnaní" },
+  { id: "zaujimavy", label: "Zaujímaví" },
+  { id: "nevhodny", label: "Nevhodný" },
+];
+
+const STATUS_LABELS: Record<CandidateStatus, string> = {
+  zamestnani: "Zamestnaný",
+  zaujimavy: "Zaujímavý",
+  nevhodny: "Nevhodný",
+};
+
 export default function UchadzaciPage() {
-  const { candidates, removeCandidate } = useCandidates();
+  const { candidates, removeCandidate, updateCandidateStatus } = useCandidates();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<FilterTab>("vsetci");
+
+  const filtered =
+    activeTab === "vsetci"
+      ? candidates
+      : candidates.filter((c) => c.status === activeTab);
 
   function formatDate(iso: string) {
     return new Date(iso).toLocaleDateString("sk-SK", {
@@ -55,29 +77,78 @@ export default function UchadzaciPage() {
     <>
       <h1 className={styles.title}>Uchádzači</h1>
 
-      {candidates.length === 0 ? (
+      {/* Filter tab bar */}
+      <div className={styles.tabBar} role="tablist" aria-label="Filter uchádzačov">
+        {TABS.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            className={`${styles.tab} ${activeTab === tab.id ? styles.tabActive : ""}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            {tab.label}
+            {tab.id !== "vsetci" && (
+              <span className={styles.tabCount}>
+                {candidates.filter((c) => c.status === tab.id).length}
+              </span>
+            )}
+            {tab.id === "vsetci" && (
+              <span className={styles.tabCount}>{candidates.length}</span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {filtered.length === 0 && candidates.length === 0 ? (
         <p className={styles.empty}>
           Zatiaľ nie sú uložení žiadni uchádzači. Analyzujte životopisy v sekcii{" "}
           <em>Analýza životopisov</em> a uložte ich pomocou tlačidla{" "}
           <em>Uložiť ako uchádzača</em>.
         </p>
+      ) : filtered.length === 0 ? (
+        <p className={styles.empty}>
+          V tejto kategórii sa nenachádzajú žiadni uchádzači.
+        </p>
       ) : (
         <ul className={styles.list}>
-          {candidates.map((candidate) => (
+          {filtered.map((candidate) => (
             <li key={candidate.id} className={styles.card}>
               <div className={styles.cardHeader}>
                 <div className={styles.cardMeta}>
                   <span className={styles.cardTitle}>{candidate.filename}</span>
-                  {candidate.positionTitle && (
-                    <span className={styles.cardTags}>
+                  <div className={styles.cardTagsRow}>
+                    {candidate.positionTitle && (
                       <span className={styles.tag}>{candidate.positionTitle}</span>
-                    </span>
-                  )}
+                    )}
+                    {candidate.status && (
+                      <span className={`${styles.tag} ${styles[`status_${candidate.status}`]}`}>
+                        {STATUS_LABELS[candidate.status]}
+                      </span>
+                    )}
+                  </div>
                   <span className={styles.cardDate}>
                     {formatDate(candidate.createdAt)}
                   </span>
                 </div>
                 <div className={styles.cardActions}>
+                  <select
+                    className={styles.statusSelect}
+                    value={candidate.status ?? ""}
+                    onChange={(e) =>
+                      updateCandidateStatus(
+                        candidate.id,
+                        (e.target.value as CandidateStatus) || undefined
+                      )
+                    }
+                    aria-label="Nastaviť kategóriu uchádzača"
+                  >
+                    <option value="">— kategória —</option>
+                    <option value="zamestnani">Zamestnaný</option>
+                    <option value="zaujimavy">Zaujímavý</option>
+                    <option value="nevhodny">Nevhodný</option>
+                  </select>
                   <Link
                     href={`/priprava-na-pohovor?candidateId=${candidate.id}`}
                     className={styles.prepButton}

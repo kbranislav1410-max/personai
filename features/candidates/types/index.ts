@@ -1,3 +1,5 @@
+export type CandidateStatus = "zamestnani" | "zaujimavy" | "nevhodny";
+
 export interface Candidate {
   id: string;
   /** Original CV filename */
@@ -10,4 +12,6 @@ export interface Candidate {
   positionTitle: string;
   /** ISO timestamp of when the candidate was saved */
   createdAt: string;
+  /** Optional categorisation set by the recruiter */
+  status?: CandidateStatus;
 }

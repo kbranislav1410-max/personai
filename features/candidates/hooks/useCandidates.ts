@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Candidate } from "../types";
+import { Candidate, CandidateStatus } from "../types";
 
 const STORAGE_KEY = "personai_candidates";
 
@@ -56,5 +56,18 @@ export function useCandidates() {
     });
   }, []);
 
-  return { candidates, addCandidate, removeCandidate };
+  const updateCandidateStatus = useCallback(
+    (id: string, status: CandidateStatus | undefined) => {
+      setCandidates((prev) => {
+        const updated = prev.map((c) =>
+          c.id === id ? { ...c, status } : c
+        );
+        saveToStorage(updated);
+        return updated;
+      });
+    },
+    []
+  );
+
+  return { candidates, addCandidate, removeCandidate, updateCandidateStatus };
 }
