@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 import { useCompany } from "@/features/company/hooks/useCompany";
 import {
   CompanyProfile,
@@ -12,11 +12,43 @@ import {
 } from "@/features/company/types";
 import styles from "./page.module.css";
 
+async function fetchGenerateDna(profile: CompanyProfile): Promise<string> {
+  const res = await fetch("/api/generate-company-dna", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: profile.name,
+      description: profile.description || undefined,
+      industry: profile.industry || undefined,
+      benefits: profile.benefits || undefined,
+      toneOfVoice: profile.toneOfVoice || undefined,
+      toneOfVoiceCustom: profile.toneOfVoiceCustom || undefined,
+      otherInfo: profile.otherInfo || undefined,
+      otherGuides: profile.otherGuides || undefined,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(
+      (err as Record<string, string>).error ??
+        "Generovanie DNA zlyhalo."
+    );
+  }
+  const data = await res.json();
+  return (data as { communicationDna: string }).communicationDna;
+}
+
 export default function MojaFirmaPage() {
   const { profile, saveProfile, loaded } = useCompany();
   const [form, setForm] = useState<CompanyProfile | null>(null);
   const [saved, setSaved] = useState(false);
   const [editing, setEditing] = useState(true); // start in edit; corrected after load
+
+  // Communication DNA state
+  const [editingDna, setEditingDna] = useState(false);
+  const [dnaForm, setDnaForm] = useState("");
+  const [generatingDna, setGeneratingDna] = useState(false);
+  const [dnaError, setDnaError] = useState<string | null>(null);
 
   // Once localStorage data is available, switch to view mode if profile has data
   useEffect(() => {
@@ -154,12 +186,28 @@ export default function MojaFirmaPage() {
   }
 
   // ── Submit ─────────────────────────────────────────────────────────────────
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     saveProfile(current);
     setSaved(true);
     setEditing(false);
     setForm(null);
+
+    // Auto-generate DNA on first save (when DNA is empty)
+    if (!current.communicationDna) {
+      setGeneratingDna(true);
+      setDnaError(null);
+      try {
+        const dna = await fetchGenerateDna(current);
+        saveProfile({ ...current, communicationDna: dna });
+      } catch (err) {
+        setDnaError(
+          err instanceof Error ? err.message : "Generovanie DNA zlyhalo."
+        );
+      } finally {
+        setGeneratingDna(false);
+      }
+    }
   }
 
   function handleEdit() {
@@ -173,6 +221,41 @@ export default function MojaFirmaPage() {
     setSaved(false);
     setEditing(false);
   }
+
+  // ── DNA handlers ───────────────────────────────────────────────────────────
+  function handleEditDna() {
+    setDnaForm(profile.communicationDna);
+    setDnaError(null);
+    setEditingDna(true);
+  }
+
+  function handleCancelDna() {
+    setDnaForm("");
+    setDnaError(null);
+    setEditingDna(false);
+  }
+
+  function handleSaveDna() {
+    saveProfile({ ...profile, communicationDna: dnaForm });
+    setEditingDna(false);
+    setDnaForm("");
+  }
+
+  const handleRegenerateDna = useCallback(async () => {
+    setGeneratingDna(true);
+    setDnaError(null);
+    setEditingDna(false);
+    try {
+      const dna = await fetchGenerateDna(profile);
+      saveProfile({ ...profile, communicationDna: dna });
+    } catch (err) {
+      setDnaError(
+        err instanceof Error ? err.message : "Generovanie DNA zlyhalo."
+      );
+    } finally {
+      setGeneratingDna(false);
+    }
+  }, [profile, saveProfile]);
 
   // ── View mode (read-only) ──────────────────────────────────────────────────
   if (!editing && profile.name) {
@@ -348,6 +431,93 @@ export default function MojaFirmaPage() {
                 )}
               </dl>
             </div>
+          )}
+        </div>
+
+        {/* ── Communication DNA section ──────────────────────────────────── */}
+        <div className={styles.dnaCard}>
+          <div className={styles.dnaSectionHeader}>
+            <div>
+              <h2 className={styles.dnaSectionTitle}>
+                🧬 Communication DNA firmy
+              </h2>
+              <p className={styles.dnaSubtitle}>
+                AI-generovaný komunikačný štýl vašej firmy – používa sa pri
+                tvorbe pracovných ponúk a ďalšej komunikácii.
+              </p>
+            </div>
+            {!editingDna && (
+              <div className={styles.dnaHeaderButtons}>
+                {profile.communicationDna && (
+                  <button
+                    type="button"
+                    className={styles.dnaEditButton}
+                    onClick={handleEditDna}
+                  >
+                    ✏️ Upraviť
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className={styles.dnaRegenerateButton}
+                  onClick={handleRegenerateDna}
+                  disabled={generatingDna}
+                >
+                  🔄 {profile.communicationDna ? "Regenerovať" : "Generovať DNA"}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {dnaError && (
+            <p className={styles.dnaError}>{dnaError}</p>
+          )}
+
+          {generatingDna && (
+            <div className={styles.dnaGenerating}>
+              <span className={styles.dnaSpinner} />
+              AI generuje Communication DNA…
+            </div>
+          )}
+
+          {!generatingDna && editingDna && (
+            <div className={styles.dnaEditArea}>
+              <textarea
+                className={styles.dnaTextarea}
+                value={dnaForm}
+                onChange={(e) => setDnaForm(e.target.value)}
+                rows={18}
+              />
+              <div className={styles.dnaActions}>
+                <button
+                  type="button"
+                  className={styles.button}
+                  onClick={handleSaveDna}
+                >
+                  Uložiť
+                </button>
+                <button
+                  type="button"
+                  className={styles.cancelButton}
+                  onClick={handleCancelDna}
+                >
+                  Zrušiť
+                </button>
+              </div>
+            </div>
+          )}
+
+          {!generatingDna && !editingDna && profile.communicationDna && (
+            <div className={styles.dnaText}>
+              {profile.communicationDna}
+            </div>
+          )}
+
+          {!generatingDna && !editingDna && !profile.communicationDna && (
+            <p className={styles.dnaPlaceholder}>
+              Communication DNA ešte nebola vygenerovaná. Klikni na tlačidlo
+              „Generovať DNA" vyššie.
+            </p>
           )}
         </div>
       </>

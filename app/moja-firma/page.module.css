@@ -681,3 +681,204 @@
     border-color: #6b7280;
   }
 }
+
+/* ── Communication DNA card ─────────────────────────────────────────────── */
+.dnaCard {
+  max-width: 740px;
+  border: 1px solid #d1fae5;
+  border-radius: 10px;
+  background: #f0fdf4;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dnaCard {
+    background: #052e16;
+    border-color: #14532d;
+  }
+}
+
+.dnaSectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.dnaSectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #065f46;
+  margin-bottom: 0.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dnaSectionTitle {
+    color: #6ee7b7;
+  }
+}
+
+.dnaSubtitle {
+  font-size: 0.78rem;
+  color: #6b7280;
+  line-height: 1.5;
+  max-width: 480px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dnaSubtitle {
+    color: #9ca3af;
+  }
+}
+
+.dnaHeaderButtons {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.dnaEditButton {
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: #00f5a0;
+  color: #1a3c34;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.dnaEditButton:hover {
+  background: #00d48a;
+}
+
+.dnaRegenerateButton {
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #065f46;
+  border: 1px solid #059669;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.dnaRegenerateButton:hover:not(:disabled) {
+  background: rgba(5, 150, 105, 0.12);
+}
+
+.dnaRegenerateButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dnaRegenerateButton {
+    color: #6ee7b7;
+    border-color: #059669;
+  }
+}
+
+.dnaGenerating {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+  padding: 1rem 0;
+}
+
+.dnaSpinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d1d5db;
+  border-top-color: #00f5a0;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.dnaText {
+  font-size: 0.9rem;
+  color: #111827;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dnaText {
+    color: #e5e7eb;
+  }
+}
+
+.dnaPlaceholder {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  line-height: 1.6;
+}
+
+.dnaEditArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dnaTextarea {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  color: #111827;
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.6;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.dnaTextarea:focus {
+  border-color: #00f5a0;
+  box-shadow: 0 0 0 3px rgba(0, 245, 160, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+  .dnaTextarea {
+    background: #111827;
+    border-color: #4b5563;
+    color: #e5e7eb;
+  }
+
+  .dnaTextarea:focus {
+    border-color: #00f5a0;
+    box-shadow: 0 0 0 3px rgba(0, 212, 138, 0.15);
+  }
+}
+
+.dnaActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dnaError {
+  font-size: 0.875rem;
+  color: #dc2626;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}

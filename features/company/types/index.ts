@@ -73,6 +73,9 @@ export interface CompanyProfile {
   brandManualName: string;
   otherGuides: string;
   otherInfo: string;
+
+  // AI-generated
+  communicationDna: string;
 }
 
 export const EMPTY_COMPANY_PROFILE: CompanyProfile = {
@@ -90,5 +93,6 @@ export const EMPTY_COMPANY_PROFILE: CompanyProfile = {
   brandManualName: "",
   otherGuides: "",
   otherInfo: "",
+  communicationDna: "",
 };
 
