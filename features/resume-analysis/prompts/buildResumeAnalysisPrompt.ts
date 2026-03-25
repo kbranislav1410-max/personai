@@ -42,5 +42,16 @@ Zoznam oblastí, v ktorých kandidát nespĺňa požiadavky alebo mu chýbajú s
 ### 5. Odporúčanie
 Jednoznačné odporúčanie: **Odporúčam pozvať na pohovor** / **Neodporúčam** / **Zvážiť s výhradami** – s krátkym zdôvodnením.
 
+### 6. Skóre vhodnosti
+Na záver uveď skóre vhodnosti kandidáta na škále 1–5 podľa nasledujúcej stupnice:
+- 5 = Veľmi vhodný
+- 4 = Vhodný
+- 3 = Neutrálny
+- 2 = Nevhodný
+- 1 = Veľmi nevhodný
+
+Uveď skóre presne v tomto formáte na poslednom riadku odpovede (nič za ním):
+SKORE_VHODNOSTI: <číslo>
+
 Odpoveď píš v slovenčine.`;
 }

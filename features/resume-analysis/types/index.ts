@@ -5,9 +5,15 @@ export interface ResumeFile {
   text: string;
 }
 
+export type SuitabilityScore = 1 | 2 | 3 | 4 | 5;
+
 export interface ResumeAnalysisResult {
   filename: string;
   analysis: string;
+  /** Suitability score: 5 = very suitable … 1 = very unsuitable */
+  score: SuitabilityScore;
+  /** Human-readable label derived from score */
+  ratingLabel: string;
 }
 
 export interface AnalyzeResumesRequest {

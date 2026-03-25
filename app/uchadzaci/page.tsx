@@ -117,8 +117,13 @@ export default function UchadzaciPage() {
             <li key={candidate.id} className={styles.card}>
               <div className={styles.cardHeader}>
                 <div className={styles.cardMeta}>
-                  <span className={styles.cardTitle}>{candidate.filename}</span>
+                  <span className={styles.cardTitle}>
+                    {candidate.name || candidate.filename}
+                  </span>
                   <div className={styles.cardTagsRow}>
+                    {candidate.ratingLabel && (
+                      <span className={styles.tag}>{candidate.ratingLabel}</span>
+                    )}
                     {candidate.positionTitle && (
                       <span className={styles.tag}>{candidate.positionTitle}</span>
                     )}
@@ -129,7 +134,7 @@ export default function UchadzaciPage() {
                     )}
                   </div>
                   <span className={styles.cardDate}>
-                    {formatDate(candidate.createdAt)}
+                    ID: {candidate.id.slice(0, 8)} · {formatDate(candidate.createdAt)}
                   </span>
                 </div>
                 <div className={styles.cardActions}>
@@ -173,14 +178,14 @@ export default function UchadzaciPage() {
                     onClick={() => {
                       if (
                         window.confirm(
-                          `Skutočne chcete odstrániť uchádzača „${candidate.filename}"?`
+                          `Skutočne chcete odstrániť uchádzača „${candidate.name || candidate.filename}"?`
                         )
                       ) {
                         removeCandidate(candidate.id);
                         if (expandedId === candidate.id) setExpandedId(null);
                       }
                     }}
-                    aria-label={`Odstrániť uchádzača ${candidate.filename}`}
+                    aria-label={`Odstrániť uchádzača ${candidate.name || candidate.filename}`}
                   >
                     Odstrániť
                   </button>

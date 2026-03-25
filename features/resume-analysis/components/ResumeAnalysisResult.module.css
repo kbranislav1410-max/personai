@@ -83,6 +83,13 @@
   flex-wrap: wrap;
 }
 
+.cardMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
 .cardActions {
   display: flex;
   gap: 0.5rem;
@@ -91,6 +98,47 @@
   flex-wrap: wrap;
 }
 
+/* ── Score badge ──────────────────────────── */
+.scoreBadge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  letter-spacing: 0.01em;
+  width: fit-content;
+}
+
+.score5 {
+  background: #d1fae5;
+  color: #065f46;
+}
+.score4 {
+  background: #ecfdf5;
+  color: #059669;
+}
+.score3 {
+  background: #fef9c3;
+  color: #78350f;
+}
+.score2 {
+  background: #ffedd5;
+  color: #9a3412;
+}
+.score1 {
+  background: #fee2e2;
+  color: #7f1d1d;
+}
+
+@media (prefers-color-scheme: dark) {
+  .score5 { background: #064e3b; color: #6ee7b7; }
+  .score4 { background: #065f46; color: #a7f3d0; }
+  .score3 { background: #451a03; color: #fde68a; }
+  .score2 { background: #431407; color: #fdba74; }
+  .score1 { background: #450a0a; color: #fca5a5; }
+}
+
+/* ── Buttons ──────────────────────────────── */
 .saveButton {
   padding: 0.35rem 0.875rem;
   font-size: 0.8rem;
@@ -116,6 +164,11 @@
   .saveButton:hover {
     background: #14532d;
   }
+}
+
+.savingPlaceholder {
+  display: inline-block;
+  width: 1px;
 }
 
 .savedBadge {
@@ -160,6 +213,108 @@
   background: #00d48a;
 }
 
+/* ── Inline save form ─────────────────────── */
+.saveForm {
+  border-top: 1px solid #e5e7eb;
+  padding: 0.875rem 1.25rem;
+  background: #f9fafb;
+}
+
+@media (prefers-color-scheme: dark) {
+  .saveForm {
+    border-color: #374151;
+    background: #111827;
+  }
+}
+
+.saveFormLabel {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 0.6rem;
+}
+
+.saveFormRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.saveInput {
+  padding: 0.4rem 0.65rem;
+  font-size: 0.85rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  color: inherit;
+  min-width: 120px;
+  flex: 1 1 120px;
+}
+
+.saveInput:focus {
+  outline: 2px solid #00f5a0;
+  outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .saveInput {
+    background: #1f2937;
+    border-color: #374151;
+    color: #e5e7eb;
+  }
+}
+
+.saveConfirmButton {
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #00f5a0;
+  color: #1a3c34;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.saveConfirmButton:hover:not(:disabled) {
+  background: #00d48a;
+}
+
+.saveConfirmButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.saveCancelButton {
+  padding: 0.4rem 0.875rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.saveCancelButton:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+@media (prefers-color-scheme: dark) {
+  .saveCancelButton {
+    border-color: #4b5563;
+    color: #9ca3af;
+  }
+  .saveCancelButton:hover {
+    background: #374151;
+    color: #d1d5db;
+  }
+}
+
+/* ── Analysis text ────────────────────────── */
 .analysis {
   border-top: 1px solid #e5e7eb;
   padding: 1.25rem 1.5rem;
@@ -209,3 +364,4 @@
 .analysisSpacer {
   height: 0.5rem;
 }
+

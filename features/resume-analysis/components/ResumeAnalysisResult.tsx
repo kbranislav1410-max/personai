@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ResumeAnalysisResult as AnalysisResult } from "../types";
+import { useMemo, useState } from "react";
+import { ResumeAnalysisResult as AnalysisResult, SuitabilityScore } from "../types";
 import { useCandidates } from "@/features/candidates/hooks/useCandidates";
 import styles from "./ResumeAnalysisResult.module.css";
 
@@ -13,6 +13,19 @@ interface Props {
   positionTitle?: string;
 }
 
+const SCORE_STYLE: Record<SuitabilityScore, string> = {
+  5: styles.score5,
+  4: styles.score4,
+  3: styles.score3,
+  2: styles.score2,
+  1: styles.score1,
+};
+
+interface SaveForm {
+  firstName: string;
+  lastName: string;
+}
+
 export default function ResumeAnalysisResult({
   results,
   isLoading,
@@ -21,23 +34,47 @@ export default function ResumeAnalysisResult({
   positionTitle,
 }: Props) {
   const { addCandidate } = useCandidates();
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(
-    results.length === 1 ? 0 : null
-  );
-  const [savedIndices, setSavedIndices] = useState<Set<number>>(new Set());
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
-  function handleSave(result: AnalysisResult, index: number) {
-    addCandidate({
+  /** Map from originalIndex → saved candidate id */
+  const [savedMap, setSavedMap] = useState<Record<number, string>>({});
+  /** Which card is showing the save form (keyed by originalIndex) */
+  const [savingIndex, setSavingIndex] = useState<number | null>(null);
+  /** Save form state */
+  const [saveForm, setSaveForm] = useState<SaveForm>({ firstName: "", lastName: "" });
+
+  /** Sort a copy of results by score descending (best first) */
+  const sorted = useMemo(
+    () =>
+      results
+        .map((r, originalIndex) => ({ ...r, originalIndex }))
+        .sort((a, b) => b.score - a.score),
+    [results]
+  );
+
+  /** Auto-expand single result */
+  const resolvedExpanded =
+    expandedIndex === null && sorted.length === 1 ? 0 : expandedIndex;
+
+  function openSaveForm(originalIndex: number) {
+    setSavingIndex(originalIndex);
+    setSaveForm({ firstName: "", lastName: "" });
+  }
+
+  function handleSaveSubmit(originalIndex: number, result: AnalysisResult) {
+    const fullName = `${saveForm.firstName.trim()} ${saveForm.lastName.trim()}`.trim();
+    if (fullName.length === 0) return;
+    const candidate = addCandidate({
+      name: fullName,
       filename: result.filename,
       analysis: result.analysis,
+      score: result.score,
+      ratingLabel: result.ratingLabel,
       positionId: positionId ?? "",
       positionTitle: positionTitle ?? "",
     });
-    setSavedIndices((prev) => {
-      const next = new Set(prev);
-      next.add(index);
-      return next;
-    });
+    setSavedMap((prev) => ({ ...prev, [originalIndex]: candidate.id }));
+    setSavingIndex(null);
   }
 
   if (isLoading) {
@@ -68,77 +105,144 @@ export default function ResumeAnalysisResult({
           : results.length < 5
           ? "životopisy"
           : "životopisov"}
-        )
+        ) — zoradené od najvhodnejšieho
       </h2>
 
       <ul className={styles.list}>
-        {results.map((result, index) => (
-          <li key={`${result.filename}-${index}`} className={styles.card}>
-            <div className={styles.cardHeader}>
-              <span className={styles.filename}>{result.filename}</span>
-              <div className={styles.cardActions}>
-                {savedIndices.has(index) ? (
-                  <span className={styles.savedBadge}>✓ Uložený</span>
-                ) : (
+        {sorted.map((result, sortedIdx) => {
+          const score = result.score as SuitabilityScore;
+          const isSaved = result.originalIndex in savedMap;
+          const isSaving = savingIndex === result.originalIndex;
+          const isExpanded = resolvedExpanded === sortedIdx;
+          const canSave =
+            saveForm.firstName.trim().length > 0 &&
+            saveForm.lastName.trim().length > 0;
+
+          return (
+            <li key={`${result.filename}-${sortedIdx}`} className={styles.card}>
+              <div className={styles.cardHeader}>
+                <div className={styles.cardMeta}>
+                  <span className={styles.filename}>{result.filename}</span>
+                  <span className={`${styles.scoreBadge} ${SCORE_STYLE[score]}`}>
+                    {score}/5 — {result.ratingLabel}
+                  </span>
+                </div>
+                <div className={styles.cardActions}>
+                  {isSaved ? (
+                    <span className={styles.savedBadge}>✓ Uložený</span>
+                  ) : isSaving ? (
+                    <span className={styles.savingPlaceholder} />
+                  ) : (
+                    <button
+                      type="button"
+                      className={styles.saveButton}
+                      onClick={() => openSaveForm(result.originalIndex)}
+                    >
+                      Uložiť ako uchádzača
+                    </button>
+                  )}
                   <button
                     type="button"
-                    className={styles.saveButton}
-                    onClick={() => handleSave(result, index)}
+                    className={styles.toggleButton}
+                    onClick={() =>
+                      setExpandedIndex(isExpanded ? null : sortedIdx)
+                    }
+                    aria-expanded={isExpanded}
                   >
-                    Uložiť ako uchádzača
+                    {isExpanded ? "Skryť" : "Zobraziť analýzu"}
                   </button>
-                )}
-                <button
-                  type="button"
-                  className={styles.toggleButton}
-                  onClick={() =>
-                    setExpandedIndex(expandedIndex === index ? null : index)
-                  }
-                  aria-expanded={expandedIndex === index}
-                >
-                  {expandedIndex === index ? "Skryť" : "Zobraziť analýzu"}
-                </button>
+                </div>
               </div>
-            </div>
 
-            {expandedIndex === index && (
-              <div className={styles.analysis}>
-                {result.analysis.split("\n").map((line, i) => {
-                  if (line.startsWith("### ")) {
+              {/* Inline save form */}
+              {isSaving && (
+                <div className={styles.saveForm}>
+                  <p className={styles.saveFormLabel}>
+                    Zadajte meno uchádzača — systém mu pridelí jedinečné ID automaticky.
+                  </p>
+                  <div className={styles.saveFormRow}>
+                    <input
+                      className={styles.saveInput}
+                      type="text"
+                      placeholder="Meno"
+                      value={saveForm.firstName}
+                      onChange={(e) =>
+                        setSaveForm((f) => ({ ...f, firstName: e.target.value }))
+                      }
+                      autoFocus
+                    />
+                    <input
+                      className={styles.saveInput}
+                      type="text"
+                      placeholder="Priezvisko"
+                      value={saveForm.lastName}
+                      onChange={(e) =>
+                        setSaveForm((f) => ({ ...f, lastName: e.target.value }))
+                      }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && canSave)
+                          handleSaveSubmit(result.originalIndex, result);
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className={styles.saveConfirmButton}
+                      disabled={!canSave}
+                      onClick={() => handleSaveSubmit(result.originalIndex, result)}
+                    >
+                      Uložiť
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.saveCancelButton}
+                      onClick={() => setSavingIndex(null)}
+                    >
+                      Zrušiť
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {isExpanded && (
+                <div className={styles.analysis}>
+                  {result.analysis.split("\n").map((line, i) => {
+                    if (line.startsWith("### ")) {
+                      return (
+                        <h3 key={i} className={styles.analysisHeading}>
+                          {line.replace(/^###\s*/, "")}
+                        </h3>
+                      );
+                    }
+                    if (line.startsWith("**") && line.endsWith("**")) {
+                      return (
+                        <p key={i} className={styles.analysisBold}>
+                          {line.replace(/\*\*/g, "")}
+                        </p>
+                      );
+                    }
+                    if (line.startsWith("- ") || line.startsWith("* ")) {
+                      return (
+                        <p key={i} className={styles.analysisBullet}>
+                          {line.replace(/^[-*]\s/, "• ")}
+                        </p>
+                      );
+                    }
+                    if (line.trim() === "") {
+                      return <div key={i} className={styles.analysisSpacer} />;
+                    }
                     return (
-                      <h3 key={i} className={styles.analysisHeading}>
-                        {line.replace(/^###\s*/, "")}
-                      </h3>
-                    );
-                  }
-                  if (line.startsWith("**") && line.endsWith("**")) {
-                    return (
-                      <p key={i} className={styles.analysisBold}>
-                        {line.replace(/\*\*/g, "")}
+                      <p key={i} className={styles.analysisLine}>
+                        {line}
                       </p>
                     );
-                  }
-                  if (line.startsWith("- ") || line.startsWith("* ")) {
-                    return (
-                      <p key={i} className={styles.analysisBullet}>
-                        {line.replace(/^[-*]\s/, "• ")}
-                      </p>
-                    );
-                  }
-                  if (line.trim() === "") {
-                    return <div key={i} className={styles.analysisSpacer} />;
-                  }
-                  return (
-                    <p key={i} className={styles.analysisLine}>
-                      {line}
-                    </p>
-                  );
-                })}
-              </div>
-            )}
-          </li>
-        ))}
+                  })}
+                </div>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
 }
+
