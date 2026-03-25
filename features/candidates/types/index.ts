@@ -1,5 +1,14 @@
 export type CandidateStatus = "zamestnani" | "zaujimavy" | "nevhodny";
 
+export type ActivityEventType = "saved" | "status_changed" | "interview_prepared";
+
+export interface ActivityEvent {
+  type: ActivityEventType;
+  timestamp: string;
+  /** Optional human-readable note describing what happened */
+  note?: string;
+}
+
 export interface Candidate {
   id: string;
   /** Full name entered by the recruiter when saving (e.g. "Ján Novák") */
@@ -20,4 +29,6 @@ export interface Candidate {
   createdAt: string;
   /** Optional categorisation set by the recruiter */
   status?: CandidateStatus;
+  /** Chronological log of notable events for this candidate */
+  activityLog?: ActivityEvent[];
 }

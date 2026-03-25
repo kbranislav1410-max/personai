@@ -213,6 +213,19 @@
   word-break: break-all;
 }
 
+.cardTitleLink {
+  font-size: 1rem;
+  font-weight: 700;
+  word-break: break-word;
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.15s;
+}
+
+.cardTitleLink:hover {
+  color: #00d48a;
+}
+
 .cardTags {
   display: flex;
   flex-wrap: wrap;
@@ -245,6 +258,36 @@
   gap: 0.5rem;
   flex-shrink: 0;
   align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.detailButton {
+  padding: 0.35rem 0.875rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: transparent;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.detailButton:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+@media (prefers-color-scheme: dark) {
+  .detailButton {
+    color: #d1d5db;
+    border-color: #4b5563;
+  }
+  .detailButton:hover {
+    background: #374151;
+  }
 }
 
 .toggleButton {

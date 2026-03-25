@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Candidate, CandidateStatus } from "../types";
+import { ActivityEvent, Candidate, CandidateStatus } from "../types";
 
 const STORAGE_KEY = "personai_candidates";
 
@@ -23,6 +23,12 @@ function saveToStorage(candidates: Candidate[]): void {
   }
 }
 
+const STATUS_NOTES: Record<CandidateStatus, string> = {
+  zamestnani: "Kategória zmenená na: Zamestnaný",
+  zaujimavy: "Kategória zmenená na: Zaujímavý",
+  nevhodny: "Kategória zmenená na: Nevhodný",
+};
+
 export function useCandidates() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
 
@@ -32,10 +38,17 @@ export function useCandidates() {
   }, []);
 
   const addCandidate = useCallback(
-    (data: Omit<Candidate, "id" | "createdAt">) => {
+    (data: Omit<Candidate, "id" | "createdAt" | "activityLog">) => {
+      const now = new Date().toISOString();
+      const initialEvent: ActivityEvent = {
+        type: "saved",
+        timestamp: now,
+        note: "Uchádzač uložený z analýzy životopisu",
+      };
       const next: Candidate = {
         id: crypto.randomUUID(),
-        createdAt: new Date().toISOString(),
+        createdAt: now,
+        activityLog: [initialEvent],
         ...data,
       };
       setCandidates((prev) => {
@@ -59,8 +72,37 @@ export function useCandidates() {
   const updateCandidateStatus = useCallback(
     (id: string, status: CandidateStatus | undefined) => {
       setCandidates((prev) => {
+        const updated = prev.map((c) => {
+          if (c.id !== id) return c;
+          const event: ActivityEvent | null = status
+            ? {
+                type: "status_changed",
+                timestamp: new Date().toISOString(),
+                note: STATUS_NOTES[status],
+              }
+            : null;
+          return {
+            ...c,
+            status,
+            activityLog: event
+              ? [...(c.activityLog ?? []), event]
+              : c.activityLog,
+          };
+        });
+        saveToStorage(updated);
+        return updated;
+      });
+    },
+    []
+  );
+
+  const addActivityEvent = useCallback(
+    (id: string, event: ActivityEvent) => {
+      setCandidates((prev) => {
         const updated = prev.map((c) =>
-          c.id === id ? { ...c, status } : c
+          c.id === id
+            ? { ...c, activityLog: [...(c.activityLog ?? []), event] }
+            : c
         );
         saveToStorage(updated);
         return updated;
@@ -69,5 +111,12 @@ export function useCandidates() {
     []
   );
 
-  return { candidates, addCandidate, removeCandidate, updateCandidateStatus };
+  return {
+    candidates,
+    addCandidate,
+    removeCandidate,
+    updateCandidateStatus,
+    addActivityEvent,
+  };
 }
+

@@ -117,9 +117,12 @@ export default function UchadzaciPage() {
             <li key={candidate.id} className={styles.card}>
               <div className={styles.cardHeader}>
                 <div className={styles.cardMeta}>
-                  <span className={styles.cardTitle}>
+                  <Link
+                    href={`/uchadzaci/${candidate.id}`}
+                    className={styles.cardTitleLink}
+                  >
                     {candidate.name || candidate.filename}
-                  </span>
+                  </Link>
                   <div className={styles.cardTagsRow}>
                     {candidate.ratingLabel && (
                       <span className={styles.tag}>{candidate.ratingLabel}</span>
@@ -138,6 +141,12 @@ export default function UchadzaciPage() {
                   </span>
                 </div>
                 <div className={styles.cardActions}>
+                  <Link
+                    href={`/uchadzaci/${candidate.id}`}
+                    className={styles.detailButton}
+                  >
+                    Detail
+                  </Link>
                   <select
                     className={styles.statusSelect}
                     value={candidate.status ?? ""}
