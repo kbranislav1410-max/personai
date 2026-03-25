@@ -227,8 +227,10 @@
   font-weight: 600;
   background: #00f5a0;
   color: #1a3c34;
+  border: none;
   border-radius: 5px;
   text-decoration: none;
+  cursor: pointer;
   transition: background 0.15s;
   white-space: nowrap;
 }

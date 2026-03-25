@@ -205,15 +205,32 @@ export default function CandidateDetailContent() {
           <p className={styles.infoCardValue}>{candidate.filename}</p>
           {candidate.cvDataUrl ? (
             <div className={styles.cvActions}>
-              <a
-                href={candidate.cvDataUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
                 className={styles.cvOpenButton}
                 title="Otvoriť životopis v novom okne"
+                onClick={() => {
+                  // Convert the base64 data URL to a Blob URL so the browser
+                  // opens the file correctly. Chrome blocks data: URLs in new tabs.
+                  const [meta, base64] = candidate.cvDataUrl!.split(",");
+                  const mime =
+                    meta.match(/:(.*?);/)?.[1] ?? "application/octet-stream";
+                  const bytes = Uint8Array.from(atob(base64), (c) =>
+                    c.charCodeAt(0)
+                  );
+                  const blob = new Blob([bytes], { type: mime });
+                  const blobUrl = URL.createObjectURL(blob);
+                  const win = window.open(blobUrl, "_blank", "noopener,noreferrer");
+                  // Revoke the object URL after the browser has loaded it
+                  if (win) {
+                    win.addEventListener("load", () =>
+                      URL.revokeObjectURL(blobUrl)
+                    );
+                  }
+                }}
               >
                 Otvoriť
-              </a>
+              </button>
               <a
                 href={candidate.cvDataUrl}
                 download={candidate.filename}
