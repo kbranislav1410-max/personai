@@ -13,7 +13,7 @@ const features = [
     icon: "📄",
   },
   {
-    href: "/pozicie",
+    href: "/pozicie/zoznam-pozicii",
     title: "Pozície",
     description: "Prehľad uložených pracovných pozícií.",
     icon: "💼",
@@ -31,8 +31,8 @@ const features = [
     icon: "🎤",
   },
   {
-    href: "/",
-    title: "Generátor pracovnej ponuky",
+    href: "/pozicie/nova-pozicia",
+    title: "Nová pozícia",
     description: "Vygenerujte profesionálny inzerát pomocou AI.",
     icon: "✍️",
   },
@@ -90,7 +90,7 @@ export default function DashboardPage() {
         <section className={styles.recentSection}>
           <div className={styles.recentHeader}>
             <h2 className={styles.sectionTitle}>Posledné pozície</h2>
-            <Link href="/pozicie" className={styles.viewAll}>Zobraziť všetky →</Link>
+            <Link href="/pozicie/zoznam-pozicii" className={styles.viewAll}>Zobraziť všetky →</Link>
           </div>
           {recentPositions.length === 0 ? (
             <p className={styles.empty}>Zatiaľ žiadne uložené pozície.</p>

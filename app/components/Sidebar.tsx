@@ -7,8 +7,14 @@ import styles from "./Sidebar.module.css";
 const navItems = [
   { href: "/dashboard", label: "Prehľad" },
   { href: "/moja-firma", label: "Moja firma" },
-  { href: "/", label: "Generátor pracovnej ponuky" },
-  { href: "/pozicie", label: "Pozície" },
+  {
+    href: "/pozicie",
+    label: "Pozície",
+    children: [
+      { href: "/pozicie/nova-pozicia", label: "Nová pozícia" },
+      { href: "/pozicie/zoznam-pozicii", label: "Zoznam pozícií" },
+    ],
+  },
   { href: "/uchadzaci", label: "Uchádzači" },
   { href: "/analyza-zivotopisov", label: "Analýza životopisov" },
   { href: "/priprava-na-pohovor", label: "Príprava na pohovor" },
@@ -28,7 +34,7 @@ export default function Sidebar() {
         />
       </div>
       <ul className={styles.navList}>
-        {navItems.map(({ href, label }) => (
+        {navItems.map(({ href, label, children }) => (
           <li key={href}>
             <Link
               href={href}
@@ -36,6 +42,20 @@ export default function Sidebar() {
             >
               {label}
             </Link>
+            {children && (
+              <ul className={styles.subNavList}>
+                {children.map((child) => (
+                  <li key={child.href}>
+                    <Link
+                      href={child.href}
+                      className={`${styles.subNavLink} ${pathname === child.href ? styles.active : ""}`}
+                    >
+                      {child.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         ))}
       </ul>

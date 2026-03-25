@@ -69,3 +69,31 @@
     display: none;
   }
 }
+
+.subNavList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.subNavLink {
+  display: block;
+  padding: 0.5rem 1.25rem 0.5rem 2rem;
+  font-size: 0.82rem;
+  color: rgba(232, 245, 240, 0.60);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subNavLink:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e8f5f0;
+}
+
+.subNavLink.active {
+  background: #00f5a0;
+  color: #1a3c34;
+  font-weight: 600;
+}
