@@ -50,8 +50,14 @@ Na záver uveď skóre vhodnosti kandidáta na škále 1–5 podľa nasledujúce
 - 2 = Nevhodný
 - 1 = Veľmi nevhodný
 
-Uveď skóre presne v tomto formáte na poslednom riadku odpovede (nič za ním):
+Uveď skóre v tomto formáte:
 SKORE_VHODNOSTI: <číslo>
+
+Na záver uveď kontaktné údaje nájdené priamo v životopise. Ak niektorý údaj nie je v životopise uvedený, napíš "—". Uveď ich presne v tomto formáte (každý na novom riadku, nič za nimi):
+KONTAKT_MENO: <meno a priezvisko>
+KONTAKT_EMAIL: <email>
+KONTAKT_TELEFON: <telefónne číslo>
+KONTAKT_ADRESA: <adresa>
 
 Odpoveď píš v slovenčine.`;
 }

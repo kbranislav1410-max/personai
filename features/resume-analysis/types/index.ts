@@ -14,6 +14,11 @@ export interface ResumeAnalysisResult {
   score: SuitabilityScore;
   /** Human-readable label derived from score */
   ratingLabel: string;
+  /** Contact details extracted from the CV by the AI */
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  contactAddress?: string;
 }
 
 export interface AnalyzeResumesRequest {

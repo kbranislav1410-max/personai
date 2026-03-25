@@ -356,6 +356,63 @@
   }
 }
 
+/* ── Contact info ─────────────────────────── */
+.contactGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 1.25rem 1rem;
+}
+
+.contactRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.contactRow:last-child {
+  border-bottom: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .contactRow {
+    border-bottom-color: #374151;
+  }
+}
+
+.contactLabel {
+  flex: 0 0 90px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.contactValue {
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+.contactLink {
+  font-size: 0.9rem;
+  color: #059669;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.contactLink:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+  .contactLink {
+    color: #34d399;
+  }
+}
+
 .sectionHeader {
   display: flex;
   align-items: center;

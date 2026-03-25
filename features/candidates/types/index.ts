@@ -37,4 +37,9 @@ export interface Candidate {
    * Optional – candidates saved before this field existed will not have it.
    */
   cvDataUrl?: string;
+  /** Contact details extracted from the CV by the AI */
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  contactAddress?: string;
 }

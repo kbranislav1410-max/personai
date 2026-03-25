@@ -272,6 +272,49 @@ export default function CandidateDetailContent() {
         </div>
       </div>
 
+      {/* Contact info (extracted by AI from the CV) */}
+      {(candidate.contactName || candidate.contactEmail || candidate.contactPhone || candidate.contactAddress) && (
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>📇 Kontaktné údaje</h2>
+          <div className={styles.contactGrid}>
+            {candidate.contactName && (
+              <div className={styles.contactRow}>
+                <span className={styles.contactLabel}>Meno</span>
+                <span className={styles.contactValue}>{candidate.contactName}</span>
+              </div>
+            )}
+            {candidate.contactEmail && (
+              <div className={styles.contactRow}>
+                <span className={styles.contactLabel}>E-mail</span>
+                <a
+                  href={`mailto:${candidate.contactEmail}`}
+                  className={styles.contactLink}
+                >
+                  {candidate.contactEmail}
+                </a>
+              </div>
+            )}
+            {candidate.contactPhone && (
+              <div className={styles.contactRow}>
+                <span className={styles.contactLabel}>Telefón</span>
+                <a
+                  href={`tel:${candidate.contactPhone}`}
+                  className={styles.contactLink}
+                >
+                  {candidate.contactPhone}
+                </a>
+              </div>
+            )}
+            {candidate.contactAddress && (
+              <div className={styles.contactRow}>
+                <span className={styles.contactLabel}>Adresa</span>
+                <span className={styles.contactValue}>{candidate.contactAddress}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Analysis toggle */}
       <div className={styles.section}>
         <div className={styles.sectionHeader}>

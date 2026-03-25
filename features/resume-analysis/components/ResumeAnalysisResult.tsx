@@ -59,9 +59,17 @@ export default function ResumeAnalysisResult({
   const resolvedExpanded =
     expandedIndex === null && sorted.length === 1 ? 0 : expandedIndex;
 
-  function openSaveForm(originalIndex: number) {
+  function openSaveForm(originalIndex: number, result: AnalysisResult) {
     setSavingIndex(originalIndex);
-    setSaveForm({ firstName: "", lastName: "" });
+    // Pre-fill the name fields from AI-extracted contact data when available
+    if (result.contactName) {
+      const parts = result.contactName.trim().split(/\s+/);
+      const firstName = parts.slice(0, -1).join(" ") || parts[0] || "";
+      const lastName = parts.length > 1 ? parts[parts.length - 1] : "";
+      setSaveForm({ firstName, lastName });
+    } else {
+      setSaveForm({ firstName: "", lastName: "" });
+    }
   }
 
   /** Convert a File to a base64 data URL so it can be stored in localStorage */
@@ -100,6 +108,10 @@ export default function ResumeAnalysisResult({
       positionId: positionId ?? "",
       positionTitle: positionTitle ?? "",
       cvDataUrl,
+      contactName: result.contactName,
+      contactEmail: result.contactEmail,
+      contactPhone: result.contactPhone,
+      contactAddress: result.contactAddress,
     });
     setSavedMap((prev) => ({ ...prev, [originalIndex]: candidate.id }));
     setSavingIndex(null);
@@ -164,7 +176,7 @@ export default function ResumeAnalysisResult({
                     <button
                       type="button"
                       className={styles.saveButton}
-                      onClick={() => openSaveForm(result.originalIndex)}
+                      onClick={() => openSaveForm(result.originalIndex, result)}
                     >
                       Uložiť ako uchádzača
                     </button>
