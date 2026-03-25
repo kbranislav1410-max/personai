@@ -15,8 +15,8 @@ const navItems = [
       { href: "/pozicie/zoznam-pozicii", label: "Zoznam pozícií" },
     ],
   },
-  { href: "/uchadzaci", label: "Uchádzači" },
   { href: "/analyza-zivotopisov", label: "Analýza životopisov" },
+  { href: "/uchadzaci", label: "Uchádzači" },
   { href: "/priprava-na-pohovor", label: "Príprava na pohovor" },
 ];
 
