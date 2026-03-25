@@ -210,6 +210,71 @@
   }
 }
 
+/* ── CV file actions ──────────────────────── */
+.cvActions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.cvOpenButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: #00f5a0;
+  color: #1a3c34;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.cvOpenButton:hover {
+  background: #00d48a;
+}
+
+.cvDownloadButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: transparent;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.cvDownloadButton:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+@media (prefers-color-scheme: dark) {
+  .cvDownloadButton {
+    color: #d1d5db;
+    border-color: #4b5563;
+  }
+  .cvDownloadButton:hover {
+    background: #374151;
+  }
+}
+
+.cvMissing {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: 0.2rem;
+}
+
 /* ── Info grid ────────────────────────────── */
 .infoGrid {
   display: grid;

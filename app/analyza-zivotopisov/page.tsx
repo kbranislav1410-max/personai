@@ -17,6 +17,7 @@ export default function AnalyzaZivotopisovPage() {
     id: string;
     title: string;
   } | null>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
 
   async function handleSubmit(positionId: string, files: File[]) {
     const position = positions.find((p) => p.id === positionId);
@@ -26,6 +27,7 @@ export default function AnalyzaZivotopisovPage() {
     setError(null);
     setResults([]);
     setCurrentPosition({ id: position.id, title: position.title });
+    setUploadedFiles(files);
 
     try {
       const response = await analyzeResumesClient({
@@ -65,6 +67,7 @@ export default function AnalyzaZivotopisovPage() {
         error={error}
         positionId={currentPosition?.id}
         positionTitle={currentPosition?.title}
+        files={uploadedFiles}
       />
     </>
   );

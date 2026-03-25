@@ -31,4 +31,10 @@ export interface Candidate {
   status?: CandidateStatus;
   /** Chronological log of notable events for this candidate */
   activityLog?: ActivityEvent[];
+  /**
+   * Base64 data URL of the original CV file (e.g. "data:application/pdf;base64,…").
+   * Set at save-time from the File object so it can be opened/downloaded later.
+   * Optional – candidates saved before this field existed will not have it.
+   */
+  cvDataUrl?: string;
 }

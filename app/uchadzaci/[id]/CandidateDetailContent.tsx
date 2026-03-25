@@ -203,6 +203,29 @@ export default function CandidateDetailContent() {
         <div className={styles.infoCard}>
           <h2 className={styles.infoCardTitle}>📄 Životopis</h2>
           <p className={styles.infoCardValue}>{candidate.filename}</p>
+          {candidate.cvDataUrl ? (
+            <div className={styles.cvActions}>
+              <a
+                href={candidate.cvDataUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.cvOpenButton}
+                title="Otvoriť životopis v novom okne"
+              >
+                Otvoriť
+              </a>
+              <a
+                href={candidate.cvDataUrl}
+                download={candidate.filename}
+                className={styles.cvDownloadButton}
+                title="Stiahnuť životopis"
+              >
+                Stiahnuť
+              </a>
+            </div>
+          ) : (
+            <p className={styles.cvMissing}>Súbor nie je k dispozícii</p>
+          )}
         </div>
 
         {/* Saved date */}

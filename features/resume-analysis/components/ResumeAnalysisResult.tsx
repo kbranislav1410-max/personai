@@ -11,6 +11,8 @@ interface Props {
   error: string | null;
   positionId?: string;
   positionTitle?: string;
+  /** Original File objects from the upload, used to persist CV content */
+  files?: File[];
 }
 
 const SCORE_STYLE: Record<SuitabilityScore, string> = {
@@ -32,6 +34,7 @@ export default function ResumeAnalysisResult({
   error,
   positionId,
   positionTitle,
+  files,
 }: Props) {
   const { addCandidate } = useCandidates();
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -61,9 +64,33 @@ export default function ResumeAnalysisResult({
     setSaveForm({ firstName: "", lastName: "" });
   }
 
-  function handleSaveSubmit(originalIndex: number, result: AnalysisResult) {
+  /** Convert a File to a base64 data URL so it can be stored in localStorage */
+  function readFileAsDataUrl(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleSaveSubmit(originalIndex: number, result: AnalysisResult) {
     const fullName = `${saveForm.firstName.trim()} ${saveForm.lastName.trim()}`.trim();
     if (fullName.length === 0) return;
+
+    // Find the original File object by filename and convert to a data URL so
+    // the recruiter can open/download the CV from the candidate detail page.
+    const matchingFile = files?.find((f) => f.name === result.filename);
+    let cvDataUrl: string | undefined;
+    if (matchingFile) {
+      try {
+        cvDataUrl = await readFileAsDataUrl(matchingFile);
+      } catch (err) {
+        // CV content could not be read — candidate will still be saved without it
+        console.warn("Could not read CV file as data URL:", err);
+      }
+    }
+
     const candidate = addCandidate({
       name: fullName,
       filename: result.filename,
@@ -72,6 +99,7 @@ export default function ResumeAnalysisResult({
       ratingLabel: result.ratingLabel,
       positionId: positionId ?? "",
       positionTitle: positionTitle ?? "",
+      cvDataUrl,
     });
     setSavedMap((prev) => ({ ...prev, [originalIndex]: candidate.id }));
     setSavingIndex(null);
