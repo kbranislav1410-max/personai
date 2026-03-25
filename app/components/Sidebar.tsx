@@ -12,7 +12,6 @@ const navItems = [
   { href: "/uchadzaci", label: "Uchádzači" },
   { href: "/analyza-zivotopisov", label: "Analýza životopisov" },
   { href: "/priprava-na-pohovor", label: "Príprava na pohovor" },
-  { href: "/otazka-a-ukolovanie", label: "Otázka a úkolovanie" },
 ];
 
 export default function Sidebar() {

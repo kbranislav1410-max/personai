@@ -36,12 +36,6 @@ const features = [
     description: "Vygenerujte profesionálny inzerát pomocou AI.",
     icon: "✍️",
   },
-  {
-    href: "/otazka-a-ukolovanie",
-    title: "Otázka a úkolovanie",
-    description: "Pýtajte sa AI na HR témy alebo zadávajte úlohy.",
-    icon: "💬",
-  },
 ];
 
 function formatDate(iso: string) {
