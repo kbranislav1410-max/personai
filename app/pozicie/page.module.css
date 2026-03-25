@@ -170,6 +170,173 @@
   background: #fee2e2;
 }
 
+.empty {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.attachButton {
+  padding: 0.35rem 0.875rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: transparent;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.attachButton:hover {
+  background: #eff6ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .attachButton {
+    color: #60a5fa;
+    border-color: #1e3a5f;
+  }
+
+  .attachButton:hover {
+    background: #1e3a5f;
+  }
+}
+
+/* ── Attached resumes section ───────────────── */
+.resumesSection {
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  .resumesSection {
+    border-color: #374151;
+  }
+}
+
+.resumesToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem 1.25rem;
+  background: none;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  text-align: left;
+}
+
+.resumesToggle:hover {
+  background: #f9fafb;
+  color: #374151;
+}
+
+@media (prefers-color-scheme: dark) {
+  .resumesToggle:hover {
+    background: #374151;
+    color: #d1d5db;
+  }
+}
+
+.resumesChevron {
+  margin-left: auto;
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+.resumeList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0 1.25rem 0.75rem;
+}
+
+.resumeItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.625rem;
+  background: rgba(0, 245, 160, 0.08);
+  border: 1px solid rgba(0, 212, 138, 0.25);
+  border-radius: 6px;
+  font-size: 0.78rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .resumeItem {
+    background: rgba(0, 212, 138, 0.1);
+    border-color: rgba(0, 212, 138, 0.2);
+  }
+}
+
+.resumeFilename {
+  flex: 1;
+  font-weight: 500;
+  color: #059669;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (prefers-color-scheme: dark) {
+  .resumeFilename {
+    color: #34d399;
+  }
+}
+
+.resumeId {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.resumeRemove {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.1rem;
+  flex-shrink: 0;
+}
+
+.resumeRemove:hover {
+  color: #b91c1c;
+}
+
+.resumeAnalyseRow {
+  margin-top: 0.25rem;
+}
+
+.analyseLink {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+  padding: 0.25rem 0;
+}
+
+.analyseLink:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+  .analyseLink {
+    color: #60a5fa;
+  }
+}
+
 .content {
   white-space: pre-wrap;
   font-family: inherit;

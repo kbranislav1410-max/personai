@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Position } from "@/features/positions/types";
+import { getAttachedFiles } from "@/features/resume-analysis/services/attachedFilesStore";
 import styles from "./ResumeAnalysisForm.module.css";
 
 interface Props {
@@ -19,9 +20,23 @@ export default function ResumeAnalysisForm({
   const [files, setFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  function handlePositionChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const id = e.target.value;
+    setSelectedPositionId(id);
+    // Pre-populate with any CVs already attached to this position in the
+    // current session (held in the module-level in-memory file store).
+    setFiles(id ? getAttachedFiles(id) : []);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selected = Array.from(e.target.files ?? []);
-    setFiles(selected);
+    setFiles((prev) => {
+      // Merge: avoid exact duplicate filenames already in the list
+      const existingNames = new Set(prev.map((f) => f.name));
+      const newFiles = selected.filter((f) => !existingNames.has(f.name));
+      return [...prev, ...newFiles];
+    });
   }
 
   function handleRemoveFile(index: number) {
@@ -55,16 +70,20 @@ export default function ResumeAnalysisForm({
             id="position-select"
             className={styles.select}
             value={selectedPositionId}
-            onChange={(e) => setSelectedPositionId(e.target.value)}
+            onChange={handlePositionChange}
             disabled={isLoading}
           >
             <option value="">— Vyberte pozíciu —</option>
-            {positions.map((pos) => (
-              <option key={pos.id} value={pos.id}>
-                {pos.title}
-                {pos.seniority ? ` (${pos.seniority})` : ""}
-              </option>
-            ))}
+            {positions.map((pos) => {
+              const count = pos.attachedResumes?.length ?? 0;
+              return (
+                <option key={pos.id} value={pos.id}>
+                  {pos.title}
+                  {pos.seniority ? ` (${pos.seniority})` : ""}
+                  {count > 0 ? ` · ${count} CV` : ""}
+                </option>
+              );
+            })}
           </select>
         )}
       </div>
@@ -75,7 +94,7 @@ export default function ResumeAnalysisForm({
         </label>
         <p className={styles.hint}>
           Podporované formáty: .pdf, .txt. Môžete nahrať viacero súborov naraz
-          (max. 10).
+          (max. 10). Životopisy priložené k pozícii sú predvyplnené automaticky.
         </p>
         <input
           ref={fileInputRef}
@@ -118,3 +137,5 @@ export default function ResumeAnalysisForm({
     </form>
   );
 }
+
+

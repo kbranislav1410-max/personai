@@ -1,7 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Position } from "../types";
+import { Position, AttachedResume } from "../types";
+import {
+  addAttachedFile,
+  clearAttachedFiles,
+  removeAttachedFile,
+} from "@/features/resume-analysis/services/attachedFilesStore";
 
 const STORAGE_KEY = "personai_positions";
 
@@ -58,6 +63,7 @@ export function usePositions() {
   );
 
   const removePosition = useCallback((id: string) => {
+    clearAttachedFiles(id);
     setPositions((prev) => {
       const updated = prev.filter((p) => p.id !== id);
       saveToStorage(updated);
@@ -65,5 +71,66 @@ export function usePositions() {
     });
   }, []);
 
-  return { positions, addPosition, removePosition };
+  /**
+   * Attach a CV file to a position.
+   * - Saves metadata (id, filename, timestamp) to localStorage.
+   * - Stores the actual File object in the in-memory file store.
+   */
+  const attachResumeToPosition = useCallback(
+    (positionId: string, file: File) => {
+      const resume: AttachedResume = {
+        id: crypto.randomUUID(),
+        filename: file.name,
+        attachedAt: new Date().toISOString(),
+      };
+      addAttachedFile(positionId, file);
+      setPositions((prev) => {
+        const updated = prev.map((p) =>
+          p.id === positionId
+            ? {
+                ...p,
+                attachedResumes: [...(p.attachedResumes ?? []), resume],
+              }
+            : p
+        );
+        saveToStorage(updated);
+        return updated;
+      });
+    },
+    []
+  );
+
+  /**
+   * Remove a previously attached CV from a position.
+   * Removes both the localStorage metadata and the in-memory File.
+   */
+  const removeAttachedResume = useCallback(
+    (positionId: string, resumeId: string) => {
+      setPositions((prev) => {
+        const updated = prev.map((p) => {
+          if (p.id !== positionId) return p;
+          const removed = p.attachedResumes?.find((r) => r.id === resumeId);
+          if (removed) removeAttachedFile(positionId, removed.filename);
+          return {
+            ...p,
+            attachedResumes: (p.attachedResumes ?? []).filter(
+              (r) => r.id !== resumeId
+            ),
+          };
+        });
+        saveToStorage(updated);
+        return updated;
+      });
+    },
+    []
+  );
+
+  return {
+    positions,
+    addPosition,
+    removePosition,
+    attachResumeToPosition,
+    removeAttachedResume,
+  };
 }
+
