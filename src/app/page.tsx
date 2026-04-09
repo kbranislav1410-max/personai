@@ -200,7 +200,7 @@ export default function Home() {
                     <path
                       className="opacity-75"
                       fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 12 0 12 0v4a4 4 0 00-4 4H4z"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     />
                   </svg>
                   Generujem inzeráty…
